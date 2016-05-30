@@ -615,7 +615,7 @@ void ScriptEditorDebugger::_parse_message(const String& p_msg,const Array& p_dat
 		bool warning = err[9];
 		bool e;
 		String time = String("%d:%02d:%02d:%04d").sprintf(vals,&e);
-		String txt=time+" - "+String(err[8]);
+		String txt=time+" - "+(err[8].is_zero()?String(err[7]):String(err[8]));
 
 		String tooltip=TTR("Type:")+String(warning?TTR("Warning"):TTR("Error"));
 		tooltip+="\n"+TTR("Description:")+" "+String(err[8]);
@@ -1892,7 +1892,7 @@ ScriptEditorDebugger::ScriptEditorDebugger(EditorNode *p_editor){
 		vmem_hb->add_child( memnew(Label(TTR("Total:")+" ")) );
 		vmem_total = memnew( LineEdit );
 		vmem_total->set_editable(false);
-		vmem_total->set_custom_minimum_size(Size2(100,1));
+		vmem_total->set_custom_minimum_size(Size2(100,1)*EDSCALE);
 		vmem_hb->add_child(vmem_total);
 		vmem_refresh = memnew( Button );
 		vmem_hb->add_child(vmem_refresh);
