@@ -31,6 +31,7 @@ for root, dirnames, filenames in os.walk('.'):
 		if (filename.find("collada") != -1):
 			continue
 		matches.append(os.path.join(root, filename))
+matches.sort()
 
 
 unique_str = []
@@ -59,11 +60,16 @@ for fname in matches:
 	lc = 1
 	while (l):
 
+		patterns = ['RTR(\"', 'TTR(\"']
+		idx = 0
 		pos = 0
 		while (pos >= 0):
-			pos = l.find('TTR(\"', pos)
+			pos = l.find(patterns[idx], pos)
 			if (pos == -1):
-				break
+				if (idx < len(patterns) - 1):
+					idx += 1
+					pos = 0
+				continue
 			pos += 5
 
 			msg = ""
