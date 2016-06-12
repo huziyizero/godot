@@ -708,7 +708,7 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 		case WM_SETCURSOR: {
 
 			if(LOWORD(lParam) == HTCLIENT) {
-				if(mouse_mode == MOUSE_MODE_HIDDEN) {
+				if(mouse_mode == MOUSE_MODE_HIDDEN || mouse_mode == MOUSE_MODE_CAPTURED) {
 					//Hide the cursor
 					if(hCursor == NULL)
 						hCursor = SetCursor(NULL);
@@ -1834,6 +1834,11 @@ uint64_t OS_Windows::get_unix_time() const {
 };
 
 uint64_t OS_Windows::get_system_time_secs() const {
+
+
+	const uint64_t WINDOWS_TICK = 10000000;
+	const uint64_t SEC_TO_UNIX_EPOCH = 11644473600LL;
+
 	SYSTEMTIME st;
 	GetSystemTime(&st);
 	FILETIME ft;
@@ -1842,7 +1847,8 @@ uint64_t OS_Windows::get_system_time_secs() const {
 	ret=ft.dwHighDateTime;
 	ret<<=32;
 	ret|=ft.dwLowDateTime;
-	return ret;
+
+	return (uint64_t)(ret / WINDOWS_TICK - SEC_TO_UNIX_EPOCH);
 }
 
 void OS_Windows::delay_usec(uint32_t p_usec) const {

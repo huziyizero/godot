@@ -1809,8 +1809,32 @@
 		</constant>
 		<constant name="PROPERTY_USAGE_NETWORK" value="4">
 		</constant>
+		<constant name="PROPERTY_USAGE_EDITOR_HELPER" value="8">
+		</constant>
+		<constant name="PROPERTY_USAGE_CHECKABLE" value="16">
+		</constant>
+		<constant name="PROPERTY_USAGE_CHECKED" value="32">
+		</constant>
+		<constant name="PROPERTY_USAGE_INTERNATIONALIZED" value="64">
+		</constant>
+		<constant name="PROPERTY_USAGE_BUNDLE" value="128">
+		</constant>
+		<constant name="PROPERTY_USAGE_CATEGORY" value="256">
+		</constant>
+		<constant name="PROPERTY_USAGE_STORE_IF_NONZERO" value="512">
+		</constant>
+		<constant name="PROPERTY_USAGE_STORE_IF_NONONE" value="1024">
+		</constant>
+		<constant name="PROPERTY_USAGE_NO_INSTANCE_STATE" value="2048">
+		</constant>
+		<constant name="PROPERTY_USAGE_RESTART_IF_CHANGED" value="4096">
+		</constant>
 		<constant name="PROPERTY_USAGE_DEFAULT" value="7">
 			Default usage (storage and editor).
+		</constant>
+		<constant name="PROPERTY_USAGE_DEFAULT_INTL" value="71">
+		</constant>
+		<constant name="PROPERTY_USAGE_NOEDITOR" value="5">
 		</constant>
 		<constant name="METHOD_FLAG_NORMAL" value="1">
 		</constant>
@@ -4325,7 +4349,7 @@
 	Generic array datatype.
 	</brief_description>
 	<description>
-	Generic array, contains several elements of any type, accessible by numerical index starting at 0. Arrays are always passed by reference.
+	Generic array, contains several elements of any type, accessible by numerical index starting at 0. Negative indices can be used to count from the right, like in Python. Arrays are always passed by reference.
 	</description>
 	<methods>
 		<method name="append">
@@ -4366,10 +4390,12 @@
 		<method name="find">
 			<return type="int">
 			</return>
-			<argument index="0" name="value" type="var">
+			<argument index="0" name="what" type="var">
+			</argument>
+			<argument index="1" name="from" type="int" default="0">
 			</argument>
 			<description>
-			Searches the array for a value and returns its index or -1 if not found.
+			Searches the array for a value and returns its index or -1 if not found. Optionally, the initial search index can be passed.
 			</description>
 		</method>
 		<method name="find_last">
@@ -4445,6 +4471,15 @@
 			</argument>
 			<description>
 			Resize the array to contain a different number of elements. If the array size is smaller, elements are cleared, if bigger, new elements are Null.
+			</description>
+		</method>
+		<method name="rfind">
+			<argument index="0" name="what" type="var">
+			</argument>
+			<argument index="1" name="from" type="int">
+			</argument>
+			<description>
+			Searches the array in reverse order. Optionally, a start search index can be passed. If negative, the start index is considered relative to the end of the array.
 			</description>
 		</method>
 		<method name="size">
@@ -6001,8 +6036,10 @@
 </class>
 <class name="BoneAttachment" inherits="Spatial" category="Core">
 	<brief_description>
+	A node that will attach to a bone.
 	</brief_description>
 	<description>
+	This node must be the child of a [Skeleton] node. You can then select a bone for this node to attach to. The BoneAttachment node will copy the transform of the selected bone.
 	</description>
 	<methods>
 	</methods>
@@ -9404,6 +9441,96 @@
 			<description>
 			</description>
 		</method>
+		<method name="has_icon_override" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_stylebox_override" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_font_override" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_color_override" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_constant_override" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_icon" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="type" type="String" default="&quot;&quot;">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_stylebox" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="type" type="String" default="&quot;&quot;">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_font" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="type" type="String" default="&quot;&quot;">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_color" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="type" type="String" default="&quot;&quot;">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_constant" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="type" type="String" default="&quot;&quot;">
+			</argument>
+			<description>
+			</description>
+		</method>
 		<method name="get_parent_control" qualifiers="const">
 			<return type="Control">
 			</return>
@@ -9520,6 +9647,10 @@
 		<method name="warp_mouse">
 			<argument index="0" name="to_pos" type="Vector2">
 			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="minimum_size_changed">
 			<description>
 			</description>
 		</method>
@@ -15119,6 +15250,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="2" name="dest" type="Vector2" default="0">
 			</argument>
 			<description>
+			Copy a "src_rect" [Rect2] from "src" [Image] to this [Image] on coordinates "dest".
 			</description>
 		</method>
 		<method name="brush_transfer">
@@ -15129,6 +15261,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="2" name="pos" type="Vector2" default="0">
 			</argument>
 			<description>
+			Transfer data from "src" to this [Image] using a "brush" as a mask/brush on coordinates "pos".
 			</description>
 		</method>
 		<method name="brushed">
@@ -15141,6 +15274,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="2" name="pos" type="Vector2" default="0">
 			</argument>
 			<description>
+			Return a new [Image] from this [Image] that is created by brushhing see [method brush_transfer].
 			</description>
 		</method>
 		<method name="compressed">
@@ -15149,6 +15283,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="0" name="format" type="int" default="0">
 			</argument>
 			<description>
+			Return a new compressed [Image] from this [Image] using one of [Image].COMPRESS_*.
 			</description>
 		</method>
 		<method name="converted">
@@ -15157,18 +15292,21 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="0" name="format" type="int" default="0">
 			</argument>
 			<description>
+			Return a new [Image] from this [Image] with a different format.
 			</description>
 		</method>
 		<method name="decompressed">
 			<return type="Image">
 			</return>
 			<description>
+			Return a new decompressed [Image].
 			</description>
 		</method>
 		<method name="empty">
 			<return type="bool">
 			</return>
 			<description>
+			Return whether this [Image] is empty(no data).
 			</description>
 		</method>
 		<method name="fix_alpha_edges">
@@ -15179,18 +15317,21 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<return type="RawArray">
 			</return>
 			<description>
+			Return the raw data of the [Image].
 			</description>
 		</method>
 		<method name="get_format">
 			<return type="int">
 			</return>
 			<description>
+			Return the format of the [Image], one of [Image].FORMAT_*.
 			</description>
 		</method>
 		<method name="get_height">
 			<return type="int">
 			</return>
 			<description>
+			Return the height of the [Image].
 			</description>
 		</method>
 		<method name="get_pixel">
@@ -15203,6 +15344,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="2" name="mipmap_level" type="int" default="0">
 			</argument>
 			<description>
+			Return the color of the pixel in the [Image] on coordinates "x,y" on mipmap level "mipmap_level".
 			</description>
 		</method>
 		<method name="get_rect">
@@ -15211,18 +15353,21 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="0" name="area" type="Rect2" default="0">
 			</argument>
 			<description>
+			Return a new [Image] that is a copy of "area" in this [Image].
 			</description>
 		</method>
 		<method name="get_used_rect">
 			<return type="Rect2">
 			</return>
 			<description>
+			Return the area of this [Image] that is used/visibly colored/opaque.
 			</description>
 		</method>
 		<method name="get_width">
 			<return type="int">
 			</return>
 			<description>
+			Return the width of the [Image].
 			</description>
 		</method>
 		<method name="load">
@@ -15231,6 +15376,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="0" name="path" type="String" default="0">
 			</argument>
 			<description>
+			Load an [Image].
 			</description>
 		</method>
 		<method name="put_pixel">
@@ -15243,6 +15389,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="3" name="mipmap_level" type="int" default="0">
 			</argument>
 			<description>
+			Put a pixel of "color" on coordinates "x,y" on mipmap level "mipmap_level".
 			</description>
 		</method>
 		<method name="resized">
@@ -15255,6 +15402,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="2" name="interpolation" type="int" default="1">
 			</argument>
 			<description>
+			Return a new [Image] from this [Image] that is resized to size "x,y" using [Image].INTERPOLATE_*.
 			</description>
 		</method>
 		<method name="save_png">
@@ -15263,6 +15411,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="0" name="path" type="String" default="0">
 			</argument>
 			<description>
+			Save this [Image] as a png.
 			</description>
 		</method>
 		<method name="Image">
@@ -15336,12 +15485,20 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 		</constant>
 		<constant name="FORMAT_CUSTOM" value="22">
 		</constant>
+		<constant name="INTERPOLATE_NEAREST" value="0">
+		</constant>
+		<constant name="INTERPOLATE_BILINEAR" value="1">
+		</constant>
+		<constant name="INTERPOLATE_CUBIC" value="2">
+		</constant>
 	</constants>
 </class>
 <class name="ImageTexture" inherits="Texture" category="Core">
 	<brief_description>
+	A [Texture] based on an [Image].
 	</brief_description>
 	<description>
+	A [Texture] based on an [Image]. Can be created from an [Image].
 	</description>
 	<methods>
 		<method name="create">
@@ -15354,6 +15511,9 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="3" name="flags" type="int" default="7">
 			</argument>
 			<description>
+			Create a new [ImageTexture] with "width" and "height".
+			"format" one of [Image].FORMAT_*.
+			"flags" one or more of [Texture].FLAG_*.
 			</description>
 		</method>
 		<method name="create_from_image">
@@ -15362,54 +15522,63 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="1" name="flags" type="int" default="7">
 			</argument>
 			<description>
+			Create a new [ImageTexture] from an [Image] with "flags" from [Texture].FLAG_*.
 			</description>
 		</method>
 		<method name="get_format" qualifiers="const">
 			<return type="int">
 			</return>
 			<description>
+			Return the format of the [ImageTexture], one of [Image].FORMAT_*.
 			</description>
 		</method>
 		<method name="load">
 			<argument index="0" name="path" type="String">
 			</argument>
 			<description>
+			Load an [ImageTexure].
 			</description>
 		</method>
 		<method name="set_data">
 			<argument index="0" name="image" type="Image">
 			</argument>
 			<description>
+			Set the [Image] of this [ImageTexture].
 			</description>
 		</method>
 		<method name="get_data" qualifiers="const">
 			<return type="Image">
 			</return>
 			<description>
+			Return the [Image] of this [ImageTexture].
 			</description>
 		</method>
 		<method name="set_storage">
 			<argument index="0" name="mode" type="int">
 			</argument>
 			<description>
+			Set the storage type. One of [ImageTexture].STORAGE_*.
 			</description>
 		</method>
 		<method name="get_storage" qualifiers="const">
 			<return type="int">
 			</return>
 			<description>
+			Return the storage type. One of [ImageTexture].STORAGE_*.
 			</description>
 		</method>
 		<method name="set_lossy_storage_quality">
 			<argument index="0" name="quality" type="float">
 			</argument>
 			<description>
+			Set the storage quality in case of [ImageTexture].STORAGE_COMPRESS_LOSSY.
 			</description>
 		</method>
 		<method name="get_lossy_storage_quality" qualifiers="const">
 			<return type="float">
 			</return>
 			<description>
+			Return the storage quality for [ImageTexture].STORAGE_COMPRESS_LOSSY.
 			</description>
 		</method>
 		<method name="fix_alpha_edges">
@@ -15437,10 +15606,13 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 	</methods>
 	<constants>
 		<constant name="STORAGE_RAW" value="0">
+			[Image] data is stored raw and unaltered.
 		</constant>
 		<constant name="STORAGE_COMPRESS_LOSSY" value="1">
+			[Image] data is compressed with a lossy algorithm. You can set the storage quality with [method set_lossy_storage_quality].
 		</constant>
 		<constant name="STORAGE_COMPRESS_LOSSLESS" value="2">
+			[Image] data is compressed with a lossless algorithm.
 		</constant>
 	</constants>
 </class>
@@ -17401,8 +17573,12 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 </class>
 <class name="KinematicBody" inherits="PhysicsBody" category="Core">
 	<brief_description>
+	Kinematic body 3D node.
 	</brief_description>
 	<description>
+	Kinematic bodies are special types of bodies that are meant to be user-controlled. They are not affected by physics at all (to other types of bodies, such a character or a rigid body, these are the same as a static body). They have however, two main uses:
+	Simulated Motion: When these bodies are moved manually, either from code or from an AnimationPlayer (with process mode set to fixed), the physics will automatically compute an estimate of their linear and angular velocity. This makes them very useful for moving platforms or other AnimationPlayer-controlled objects (like a door, a bridge that opens, etc).
+	Kinematic Characters: KinematicBody also has an api for moving objects (the [method move] method) while performing collision tests. This makes them really useful to implement characters that collide against a world, but that don't require advanced physics.
 	</description>
 	<methods>
 		<method name="move">
@@ -17411,6 +17587,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="0" name="rel_vec" type="Vector3">
 			</argument>
 			<description>
+			Move the body in the given direction, stopping if there is an obstacle. The returned vector is how much movement was remaining before being stopped.
 			</description>
 		</method>
 		<method name="move_to">
@@ -17419,6 +17596,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="0" name="position" type="Vector3">
 			</argument>
 			<description>
+			Move the body to the given position. This is not a teleport, and the body will stop if there is an obstacle. The returned vector is how much movement was remaining before being stopped.
 			</description>
 		</method>
 		<method name="can_teleport_to">
@@ -17434,96 +17612,112 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<return type="bool">
 			</return>
 			<description>
+			Return whether the body is colliding with another.
 			</description>
 		</method>
 		<method name="get_collision_pos" qualifiers="const">
 			<return type="Vector3">
 			</return>
 			<description>
+			Return the point in space where the body is touching another. If there is no collision, this method will return (0,0,0), so collisions must be checked first with [method is_colliding].
 			</description>
 		</method>
 		<method name="get_collision_normal" qualifiers="const">
 			<return type="Vector3">
 			</return>
 			<description>
+			Return the normal of the surface the body collided with. This is useful to implement sliding along a surface.
 			</description>
 		</method>
 		<method name="get_collider_velocity" qualifiers="const">
 			<return type="Vector3">
 			</return>
 			<description>
+			Return the velocity of the body that collided with this one.
 			</description>
 		</method>
 		<method name="get_collider" qualifiers="const">
 			<return type="Object">
 			</return>
 			<description>
+			Return the body that collided with this one.
 			</description>
 		</method>
 		<method name="get_collider_shape" qualifiers="const">
 			<return type="int">
 			</return>
 			<description>
+			Return the shape index from the body that collided with this one. If there is no collision, this method will return 0, so collisions must be checked first with [method is_colliding].
 			</description>
 		</method>
 		<method name="set_collide_with_static_bodies">
 			<argument index="0" name="enable" type="bool">
 			</argument>
 			<description>
+			Set if this body should collide with static bodies.
 			</description>
 		</method>
 		<method name="can_collide_with_static_bodies" qualifiers="const">
 			<return type="bool">
 			</return>
 			<description>
+			Return if this body can collide with static bodies.
 			</description>
 		</method>
 		<method name="set_collide_with_kinematic_bodies">
 			<argument index="0" name="enable" type="bool">
 			</argument>
 			<description>
+			Set if this body should collide with kinematic bodies.
 			</description>
 		</method>
 		<method name="can_collide_with_kinematic_bodies" qualifiers="const">
 			<return type="bool">
 			</return>
 			<description>
+			Return if this body can collide with kinematic bodies.
 			</description>
 		</method>
 		<method name="set_collide_with_rigid_bodies">
 			<argument index="0" name="enable" type="bool">
 			</argument>
 			<description>
+			Set if this body should collide with rigid bodies.
 			</description>
 		</method>
 		<method name="can_collide_with_rigid_bodies" qualifiers="const">
 			<return type="bool">
 			</return>
 			<description>
+			Return if this body can collide with rigid bodies.
 			</description>
 		</method>
 		<method name="set_collide_with_character_bodies">
 			<argument index="0" name="enable" type="bool">
 			</argument>
 			<description>
+			Set if this body should collide with character bodies.
 			</description>
 		</method>
 		<method name="can_collide_with_character_bodies" qualifiers="const">
 			<return type="bool">
 			</return>
 			<description>
+			Return if this body can collide with character bodies.
 			</description>
 		</method>
 		<method name="set_collision_margin">
 			<argument index="0" name="pixels" type="float">
 			</argument>
 			<description>
+			Set the collision margin for this object. A collision margin is an amount that all shapes will grow when computing collisions, to account for numerical imprecision.
 			</description>
 		</method>
 		<method name="get_collision_margin" qualifiers="const">
 			<return type="float">
 			</return>
 			<description>
+			Return the collision margin for this object.
 			</description>
 		</method>
 	</methods>
@@ -17546,7 +17740,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="0" name="rel_vec" type="Vector2">
 			</argument>
 			<description>
-			Move the body in the given direction, stopping if there is an obstacle.
+			Move the body in the given direction, stopping if there is an obstacle. The returned vector is how much movement was remaining before being stopped.
 			</description>
 		</method>
 		<method name="move_to">
@@ -17555,7 +17749,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="0" name="position" type="Vector2">
 			</argument>
 			<description>
-			Move the body to the given position. This is not a teleport, and the body will stop if there is an obstacle.
+			Move the body to the given position. This is not a teleport, and the body will stop if there is an obstacle. The returned vector is how much movement was remaining before being stopped.
 			</description>
 		</method>
 		<method name="test_move">
@@ -17861,8 +18055,11 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 </class>
 <class name="LargeTexture" inherits="Texture" category="Core">
 	<brief_description>
+	A Texture capable of storing many smaller Textures with offsets.
 	</brief_description>
 	<description>
+	A Texture capable of storing many smaller Textures with offsets.
+	You can dynamically add pieces(Textures) to this fLargeTexture] using different offsets.
 	</description>
 	<methods>
 		<method name="add_piece">
@@ -17873,6 +18070,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="1" name="texture" type="Texture">
 			</argument>
 			<description>
+			Add another [Texture] to this [LargeTexture], starting on offset "ofs".
 			</description>
 		</method>
 		<method name="set_piece_offset">
@@ -17881,6 +18079,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="1" name="ofs" type="Vector2">
 			</argument>
 			<description>
+			Set the offset of the piece with index "idx" to "ofs".
 			</description>
 		</method>
 		<method name="set_piece_texture">
@@ -17889,22 +18088,26 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="1" name="texture" type="Texture">
 			</argument>
 			<description>
+			Set the [Texture] of the piece with index "idx" to  "ofs".
 			</description>
 		</method>
 		<method name="set_size">
 			<argument index="0" name="size" type="Vector2">
 			</argument>
 			<description>
+			Set the size of this [LargeTexture].
 			</description>
 		</method>
 		<method name="clear">
 			<description>
+			Clear the [LargeTexture].
 			</description>
 		</method>
 		<method name="get_piece_count" qualifiers="const">
 			<return type="int">
 			</return>
 			<description>
+			Return the number of pieces currently in this [LargeTexture].
 			</description>
 		</method>
 		<method name="get_piece_offset" qualifiers="const">
@@ -17913,6 +18116,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="0" name="idx" type="int">
 			</argument>
 			<description>
+			Return the offset of the piece with index "idx".
 			</description>
 		</method>
 		<method name="get_piece_texture" qualifiers="const">
@@ -17921,6 +18125,7 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="0" name="idx" type="int">
 			</argument>
 			<description>
+			Return the [Texture] of the piece with index "idx".
 			</description>
 		</method>
 	</methods>
@@ -18671,6 +18876,36 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 		<theme_item name="font" type="Font">
 		</theme_item>
 	</theme_items>
+</class>
+<class name="Listener" inherits="Spatial" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="make_current">
+			<description>
+			</description>
+		</method>
+		<method name="clear_current">
+			<description>
+			</description>
+		</method>
+		<method name="is_current" qualifiers="const">
+			<return type="bool">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_listener_transform" qualifiers="const">
+			<return type="Transform">
+			</return>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
 </class>
 <class name="MainLoop" inherits="Object" category="Core">
 	<brief_description>
@@ -22296,6 +22531,18 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<description>
 			</description>
 		</method>
+		<method name="set_use_vsync">
+			<argument index="0" name="enable" type="bool">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="is_vsnc_enabled" qualifiers="const">
+			<return type="bool">
+			</return>
+			<description>
+			</description>
+		</method>
 	</methods>
 	<constants>
 		<constant name="DAY_SUNDAY" value="0">
@@ -23329,8 +23576,10 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 </class>
 <class name="ParallaxBackground" inherits="CanvasLayer" category="Core">
 	<brief_description>
+	A node used to create a parallax scrolling background.
 	</brief_description>
 	<description>
+	A ParallaxBackground will use one or more [ParallaxLayer] nodes to create a parallax scrolling background. Each [ParallaxLayer] can be set to move at different speeds relative to the camera movement, this can be used to create an illusion of depth in a 2D game.
 	</description>
 	<methods>
 		<method name="set_scroll_offset">
@@ -23349,60 +23598,70 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			<argument index="0" name="ofs" type="Vector2">
 			</argument>
 			<description>
+			Set the base offset in pixels of all children [ParallaxLayer] nodes.
 			</description>
 		</method>
 		<method name="get_scroll_base_offset" qualifiers="const">
 			<return type="Vector2">
 			</return>
 			<description>
+			Return the base offset.
 			</description>
 		</method>
 		<method name="set_scroll_base_scale">
 			<argument index="0" name="scale" type="Vector2">
 			</argument>
 			<description>
+			Set the base motion scale of all children [ParallaxLayer] nodes.
 			</description>
 		</method>
 		<method name="get_scroll_base_scale" qualifiers="const">
 			<return type="Vector2">
 			</return>
 			<description>
+			Return the base motion scale.
 			</description>
 		</method>
 		<method name="set_limit_begin">
 			<argument index="0" name="ofs" type="Vector2">
 			</argument>
 			<description>
+			Set the left and top limits in pixels for scrolling to begin. If the camera is outside of this limit the background will not continue to scroll. If an axis is greater than or equal to the corresponding axis of limit_end, then it will not limit scrolling for that axis.
 			</description>
 		</method>
 		<method name="get_limit_begin" qualifiers="const">
 			<return type="Vector2">
 			</return>
 			<description>
+			Return the beginning limit.
 			</description>
 		</method>
 		<method name="set_limit_end">
 			<argument index="0" name="ofs" type="Vector2">
 			</argument>
 			<description>
+			Set the right and bottom limits in pixels for scrolling to end. If the camera is outside of this limit the background will not continue to scroll. If an axis is less than or equal to the corresponding axis of limit_begin, then it will not limit scrolling for that axis.
 			</description>
 		</method>
 		<method name="get_limit_end" qualifiers="const">
 			<return type="Vector2">
 			</return>
 			<description>
+			Return the ending limit.
 			</description>
 		</method>
 		<method name="set_ignore_camera_zoom">
 			<argument index="0" name="ignore" type="bool">
 			</argument>
 			<description>
+			Set to true for all child [ParallaxLayer] nodes to not be affected by the zoom level of the camera.
 			</description>
 		</method>
 		<method name="is_ignore_camera_zoom">
 			<return type="bool">
 			</return>
 			<description>
+			Return ignoring camera zoom.
 			</description>
 		</method>
 	</methods>
@@ -23411,32 +23670,38 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 </class>
 <class name="ParallaxLayer" inherits="Node2D" category="Core">
 	<brief_description>
+	A parallax scrolling layer to be used with [ParallaxBackground].
 	</brief_description>
 	<description>
+	A ParallaxLayer must be the child of a [ParallaxBackground] node. All child nodes will be affected by the parallax scrolling of this layer.
 	</description>
 	<methods>
 		<method name="set_motion_scale">
 			<argument index="0" name="scale" type="Vector2">
 			</argument>
 			<description>
+			Set the motion scale of the ParallaxLayer. If an axis is set to 0 then it will not move at all, it will stick with the camera.
 			</description>
 		</method>
 		<method name="get_motion_scale" qualifiers="const">
 			<return type="Vector2">
 			</return>
 			<description>
+			Return the motion scale of the ParallaxLayer.
 			</description>
 		</method>
 		<method name="set_mirroring">
 			<argument index="0" name="mirror" type="Vector2">
 			</argument>
 			<description>
+			Set the mirroring of the ParallaxLayer. If an axis is set to 0 then that axis will have no mirroring.
 			</description>
 		</method>
 		<method name="get_mirroring" qualifiers="const">
 			<return type="Vector2">
 			</return>
 			<description>
+			Return the mirroring of the ParallaxLayer.
 			</description>
 		</method>
 	</methods>
@@ -24236,6 +24501,18 @@ Example: (content-length:12), (Content-Type:application/json; charset=UTF-8)
 			</return>
 			<argument index="0" name="margin" type="int">
 			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_region_rect">
+			<argument index="0" name="rect" type="Rect2">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="get_region_rect" qualifiers="const">
+			<return type="Rect2">
+			</return>
 			<description>
 			</description>
 		</method>
@@ -36652,6 +36929,14 @@ This method controls whether the position between two cached points is interpola
 			<description>
 			</description>
 		</method>
+		<method name="erase">
+			<argument index="0" name="pos" type="int">
+			</argument>
+			<argument index="1" name="chars" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
 		<method name="extension">
 			<return type="String">
 			</return>
@@ -37373,6 +37658,18 @@ This method controls whether the position between two cached points is interpola
 			<description>
 			</description>
 		</method>
+		<method name="set_region_rect">
+			<argument index="0" name="region" type="Rect2">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="get_region_rect" qualifiers="const">
+			<return type="Rect2">
+			</return>
+			<description>
+			</description>
+		</method>
 		<method name="set_draw_center">
 			<argument index="0" name="enable" type="bool">
 			</argument>
@@ -37885,8 +38182,10 @@ This method controls whether the position between two cached points is interpola
 </class>
 <class name="TestCube" inherits="GeometryInstance" category="Core">
 	<brief_description>
+	A simple cube used for testing in 3D.
 	</brief_description>
 	<description>
+	The TestCube is a simple 2x2x2 cube with a basic texture. It can be used as a placeholder, to verify how the lighting looks, to test shaders, or any other task you may need a textured model to test with.
 	</description>
 	<methods>
 	</methods>
@@ -41705,6 +42004,12 @@ This method controls whether the position between two cached points is interpola
 	2-element structure that can be used to represent positions in 2d-space, or any other pair of numeric values.
 	</description>
 	<methods>
+		<method name="abs">
+			<return type="Vector2">
+			</return>
+			<description>
+			</description>
+		</method>
 		<method name="angle">
 			<return type="float">
 			</return>
@@ -44551,11 +44856,13 @@ This method controls whether the position between two cached points is interpola
 			</argument>
 			<argument index="1" name="arg1" type="Rect2">
 			</argument>
-			<argument index="2" name="arg2" type="RID">
+			<argument index="2" name="arg2" type="Rect2">
 			</argument>
-			<argument index="3" name="arg3" type="RealArray">
+			<argument index="3" name="arg3" type="RID">
 			</argument>
-			<argument index="4" name="arg4" type="Color" default="Color(1,1,1,1)">
+			<argument index="4" name="arg4" type="RealArray">
+			</argument>
+			<argument index="5" name="arg5" type="Color" default="Color(1,1,1,1)">
 			</argument>
 			<description>
 			</description>

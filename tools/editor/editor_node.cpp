@@ -56,12 +56,12 @@
 #include "io/zip_io.h"
 #include "io/config_file.h"
 #include "animation_editor.h"
-
+#include "io/stream_peer_ssl.h"
 // plugins
 #include "plugins/sprite_frames_editor_plugin.h"
 #include "plugins/texture_region_editor_plugin.h"
 #include "plugins/canvas_item_editor_plugin.h"
-#include "addon_editor_plugin.h"
+#include "asset_library_editor_plugin.h"
 #include "plugins/spatial_editor_plugin.h"
 #include "plugins/sample_editor_plugin.h"
 #include "plugins/texture_editor_plugin.h"
@@ -1937,7 +1937,7 @@ void EditorNode::_run(bool p_current,const String& p_custom) {
 			current_option=-1;
 			//accept->get_cancel()->hide();
 			accept->get_ok()->set_text(TTR("I see.."));
-			accept->set_text("No main scene has ever been defined.\nSelect one from \"Project Settings\" under the 'application' category.");
+			accept->set_text(TTR("No main scene has ever been defined.\nSelect one from \"Project Settings\" under the 'application' category."));
 			accept->popup_centered_minsize();
 			return;
 		}
@@ -2414,6 +2414,7 @@ void EditorNode::_menu_option_confirm(int p_option,bool p_confirmed) {
 
 
 			_menu_option_confirm(RUN_STOP,true);
+			exiting=true;
 			get_tree()->quit();
 
 		} break;
@@ -2747,6 +2748,7 @@ void EditorNode::_menu_option_confirm(int p_option,bool p_confirmed) {
 			}
 
 			_menu_option_confirm(RUN_STOP,true);
+			exiting=true;
 			get_tree()->quit();
 			String exec = OS::get_singleton()->get_executable_path();
 
@@ -3087,6 +3089,7 @@ void EditorNode::set_addon_plugin_enabled(const String& p_addon,bool p_enabled) 
 	if (!p_enabled) {
 
 		EditorPlugin *addon = plugin_addons[p_addon];
+		editor_data.remove_editor_plugin( addon );
 		memdelete(addon); //bye
 		plugin_addons.erase(p_addon);
 		_update_addon_config();
@@ -5244,6 +5247,7 @@ EditorNode::EditorNode() {
 
 
 	singleton=this;
+	exiting=false;
 	last_checked_version=0;
 	changing_scene=false;
 	_initializing_addons=false;
@@ -6271,7 +6275,7 @@ EditorNode::EditorNode() {
 	logo->set_texture(gui_base->get_icon("Logo","EditorIcons") );
 
 	warning = memnew( AcceptDialog );
-	add_child(warning);
+	gui_base->add_child(warning);
 
 
 
@@ -6378,8 +6382,12 @@ EditorNode::EditorNode() {
 	add_editor_plugin( memnew( CanvasItemEditorPlugin(this) ) );
 	add_editor_plugin( memnew( SpatialEditorPlugin(this) ) );
 	add_editor_plugin( memnew( ScriptEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( AddonEditorPlugin(this) ) );
 
+	if (StreamPeerSSL::is_available()) {
+		add_editor_plugin( memnew( AssetLibraryEditorPlugin(this) ) );
+	} else {
+		WARN_PRINT("Asset Library not available, as it requires SSL to work.");
+	}
 	//more visually meaningful to have this later
 	raise_bottom_panel_item(AnimationPlayerEditor::singleton);
 
