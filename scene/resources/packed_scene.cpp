@@ -375,7 +375,7 @@ Error SceneState::_parse_node(Node *p_owner,Node *p_node,int p_parent_idx, Map<S
 						PackState ps;
 						ps.node=node;
 						ps.state=state;
-						pack_state_stack.push_front(ps);
+						pack_state_stack.push_back(ps);
 						instanced_by_owner=false;
 					}
 				}
@@ -545,9 +545,21 @@ https://github.com/godotengine/godot/issues/3127
 			}
 
 #endif
-			if (exists && bool(Variant::evaluate(Variant::OP_EQUAL,value,original))) {
-				//exists and did not change
-				continue;
+
+			if (exists) {
+
+				//check if already exists and did not change
+				if (value.get_type()==Variant::REAL && original.get_type()==Variant::REAL) {
+					//this must be done because, as some scenes save as text, there might be a tiny difference in floats due to numerical error
+					float a = value;
+					float b = original;
+
+					if (Math::abs(a-b)<CMP_EPSILON)
+						continue;
+				} else if (bool(Variant::evaluate(Variant::OP_EQUAL,value,original))) {
+
+					continue;
+				}
 			}
 
 			if (!exists && isdefault) {
@@ -719,6 +731,7 @@ Error SceneState::_parse_connections(Node *p_owner,Node *p_node, Map<StringName,
 
 	List<MethodInfo> _signals;
 	p_node->get_signal_list(&_signals);
+	_signals.sort();
 
 	//ERR_FAIL_COND_V( !node_map.has(p_node), ERR_BUG);
 	//NodeData &nd = nodes[node_map[p_node]];
@@ -728,6 +741,9 @@ Error SceneState::_parse_connections(Node *p_owner,Node *p_node, Map<StringName,
 
 		List<Node::Connection> conns;
 		p_node->get_signal_connection_list(E->get().name,&conns);
+
+		conns.sort();
+
 		for(List<Node::Connection>::Element *F=conns.front();F;F=F->next()) {
 
 			const Node::Connection &c = F->get();
@@ -1403,8 +1419,7 @@ NodePath SceneState::get_node_path(int p_idx,bool p_for_parent) const {
 		}
 	}
 
-	for(int i=0;i<base_path.get_name_count();i++) {
-		StringName sn = base_path.get_name(i);
+	for(int i=base_path.get_name_count()-1;i>=0;i--) {
 		sub_path.insert(0,base_path.get_name(i));
 	}
 

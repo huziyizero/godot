@@ -120,15 +120,33 @@ void OS_X11::initialize(const VideoMode& p_desired,int p_video_driver,int p_audi
 
 	const char* err;
 	xrr_get_monitors = NULL;
+	xrr_free_monitors = NULL;
+	int xrandr_major = 0;
+	int xrandr_minor = 0;
+	int event_base, error_base;
+	xrandr_ext_ok = XRRQueryExtension(x11_display,&event_base, &error_base);
 	xrandr_handle = dlopen("libXrandr.so", RTLD_LAZY);
 	err = dlerror();
 	if (!xrandr_handle) {
-		fprintf(stderr, "could not load libXrandr.so, dpi detection disabled. Error: %s\n", err);
+		fprintf(stderr, "could not load libXrandr.so, Error: %s\n", err);
 	}
 	else {
-		xrr_get_monitors = (xrr_get_monitors_t) dlsym(xrandr_handle, "XRRGetMonitors");
-		if (!xrr_get_monitors)
-			fprintf(stderr, "could not find symbol XRRGetMonitors, dpi detection will only work on the first screen\nError: %s\n", err);
+		XRRQueryVersion(x11_display, &xrandr_major, &xrandr_minor);
+		if (((xrandr_major << 8) | xrandr_minor) >= 0x0105) {
+			xrr_get_monitors = (xrr_get_monitors_t) dlsym(xrandr_handle, "XRRGetMonitors");
+			if (!xrr_get_monitors) {
+				err = dlerror();
+				fprintf(stderr, "could not find symbol XRRGetMonitors\nError: %s\n", err);
+			}
+			else {
+				xrr_free_monitors = (xrr_free_monitors_t) dlsym(xrandr_handle, "XRRFreeMonitors");
+				if (!xrr_free_monitors) {
+					err = dlerror();
+					fprintf(stderr, "could not find XRRFreeMonitors\nError: %s\n", err);
+					xrr_get_monitors = NULL;
+				}
+			}
+		}
 	}
 
 	xim = XOpenIM (x11_display, NULL, NULL, NULL);
@@ -326,7 +344,7 @@ void OS_X11::initialize(const VideoMode& p_desired,int p_video_driver,int p_audi
 	/* set the name and class hints for the window manager to use */
 	classHint = XAllocClassHint();
 	if (classHint) {
-		classHint->res_name = (char *)"Godot";
+		classHint->res_name = (char *)"Godot_Engine";
 		classHint->res_class = (char *)"Godot";
 	}
 	XSetClassHint(x11_display, x11_window, classHint);
@@ -745,19 +763,18 @@ int OS_X11::get_screen_dpi(int p_screen) const {
 	ERR_FAIL_INDEX_V(p_screen, get_screen_count(), 0);
 
 	//Get physical monitor Dimensions through XRandR and calculate dpi
-	int event_base, error_base;
-	const Bool ext_okay = XRRQueryExtension(x11_display,&event_base, &error_base);
-
 	Size2 sc = get_screen_size(p_screen);
-	if (ext_okay) {
+	if (xrandr_ext_ok) {
 		int count = 0;
 		if (xrr_get_monitors) {
 			xrr_monitor_info *monitors = xrr_get_monitors(x11_display, x11_window, true, &count);
 			if (p_screen < count) {
 				double xdpi = sc.width  / (double) monitors[p_screen].mwidth  * 25.4;
 				double ydpi = sc.height / (double) monitors[p_screen].mheight * 25.4;
+				xrr_free_monitors(monitors);
 				return (xdpi + ydpi) / 2;
 			}
+			xrr_free_monitors(monitors);
 		}
 		else if (p_screen == 0) {
 			XRRScreenSize *sizes = XRRSizes(x11_display, 0, &count);
@@ -1608,7 +1625,7 @@ void OS_X11::process_xevents() {
 
 				//Reply that all is well.
 				XClientMessageEvent m;
-				memset(&m, sizeof(m), 0);
+				memset(&m, 0, sizeof(m));
 				m.type = ClientMessage;
 				m.display = x11_display;
 				m.window = xdnd_source_window;
@@ -1645,7 +1662,7 @@ void OS_X11::process_xevents() {
 				//xdnd position event, reply with an XDND status message
 				//just depending on type of data for now
 				XClientMessageEvent m;
-				memset(&m, sizeof(m), 0);
+				memset(&m, 0, sizeof(m));
 				m.type = ClientMessage;
 				m.display = event.xclient.display;
 				m.window = event.xclient.data.l[0];
@@ -1672,7 +1689,7 @@ void OS_X11::process_xevents() {
 				else {
 					//Reply that we're not interested.
 					XClientMessageEvent m;
-					memset(&m, sizeof(m), 0);
+					memset(&m, 0, sizeof(m));
 					m.type = ClientMessage;
 					m.display = event.xclient.display;
 					m.window = event.xclient.data.l[0];

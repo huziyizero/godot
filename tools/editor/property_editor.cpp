@@ -612,6 +612,7 @@ bool CustomPropertyEditor::edit(Object* p_owner,const String& p_name,Variant::Ty
 			color_picker->set_edit_alpha(hint!=PROPERTY_HINT_COLOR_NO_ALPHA);
 			color_picker->set_color(v);
 			set_size( Size2(300*EDSCALE, color_picker->get_combined_minimum_size().height+10*EDSCALE));
+			color_picker->set_focus_on_line_edit();
 			/*
 			int ofs=80;
 			int m=10;
@@ -1963,6 +1964,13 @@ bool PropertyEditor::_is_property_different(const Variant& p_current, const Vari
 			return false;
 	}
 
+	if (p_current.get_type()==Variant::REAL && p_orig.get_type()==Variant::REAL) {
+		float a = p_current;
+		float b = p_orig;
+
+		return Math::abs(a-b)>CMP_EPSILON; //this must be done because, as some scenes save as text, there might be a tiny difference in floats due to numerical error
+	}
+
 	return bool(Variant::evaluate(Variant::OP_NOT_EQUAL,p_current,p_orig));
 }
 
@@ -2135,6 +2143,7 @@ void PropertyEditor::set_item_text(TreeItem *p_item, int p_type, const String& p
 
 			if (obj->get( p_name ).get_type() == Variant::NIL || obj->get( p_name ).operator RefPtr().is_null()) {
 				p_item->set_text(1,"<null>");
+				p_item->set_icon(1,Ref<Texture>());
 
 				Dictionary d = p_item->get_metadata(0);
 				int hint=d.has("hint")?d["hint"].operator int():-1;
@@ -2231,6 +2240,7 @@ void PropertyEditor::_check_reload_status(const String&p_name, TreeItem* item) {
 
 		if (_get_instanced_node_original_property(p_name,vorig) || usage) {
 			Variant v = obj->get(p_name);
+
 
 			bool changed = _is_property_different(v,vorig,usage);
 
@@ -2804,7 +2814,7 @@ void PropertyEditor::update_tree() {
 			if (capitalize_paths)
 				cat = cat.capitalize();
 
-			if (cat.findn(filter)==-1 && name.findn(filter)==-1)
+			if (!filter.is_subsequence_ofi(cat) && !filter.is_subsequence_ofi(name))
 				continue;
 		}
 
@@ -2971,10 +2981,8 @@ void PropertyEditor::update_tree() {
 				else
 					item->set_cell_mode( 1, TreeItem::CELL_MODE_RANGE_EXPRESSION );
 
-				if (p.hint==PROPERTY_HINT_SPRITE_FRAME) {
-					item->set_range_config(1,0,99999,1);
 
-				} else if (p.hint==PROPERTY_HINT_RANGE || p.hint==PROPERTY_HINT_EXP_RANGE) {
+				if (p.hint==PROPERTY_HINT_SPRITE_FRAME || p.hint==PROPERTY_HINT_RANGE || p.hint==PROPERTY_HINT_EXP_RANGE) {
 
 					int c = p.hint_string.get_slice_count(",");
 					float min=0,max=100,step=1;
@@ -3341,6 +3349,7 @@ void PropertyEditor::update_tree() {
 
 				if (obj->get( p.name ).get_type() == Variant::NIL || obj->get( p.name ).operator RefPtr().is_null()) {
 					item->set_text(1,"<null>");
+					item->set_icon(1,Ref<Texture>());
 
 				} else {
 					RES res = obj->get( p.name ).operator RefPtr();
@@ -3926,6 +3935,7 @@ void PropertyEditor::_bind_methods() {
 	ObjectTypeDB::bind_method( "_filter_changed",&PropertyEditor::_filter_changed);
 	ObjectTypeDB::bind_method( "update_tree",&PropertyEditor::update_tree);
 	ObjectTypeDB::bind_method( "_resource_preview_done",&PropertyEditor::_resource_preview_done);
+	ObjectTypeDB::bind_method( "refresh",&PropertyEditor::refresh);
 
 	ObjectTypeDB::bind_method(_MD("get_drag_data_fw"), &PropertyEditor::get_drag_data_fw);
 	ObjectTypeDB::bind_method(_MD("can_drop_data_fw"), &PropertyEditor::can_drop_data_fw);

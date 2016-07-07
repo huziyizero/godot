@@ -604,10 +604,28 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 		} break;
 
 		case WM_SIZE: {
-			video_mode.width=LOWORD(lParam);
-			video_mode.height=HIWORD(lParam);
+			int window_w = LOWORD(lParam);
+			int window_h = HIWORD(lParam);
+			if (window_w > 0 && window_h > 0) {
+				video_mode.width = window_w;
+				video_mode.height = window_h;
+			}
 			//return 0;								// Jump Back
 		} break;
+
+		case WM_ENTERSIZEMOVE: {
+			move_timer_id = SetTimer(hWnd, 1, USER_TIMER_MINIMUM,(TIMERPROC) NULL);
+		} break;
+		case WM_EXITSIZEMOVE: {
+			KillTimer(hWnd, move_timer_id);
+		} break;
+		case WM_TIMER: {
+			if (wParam == move_timer_id) {
+				process_key_events();
+				Main::iteration();
+			}
+		} break;
+
 		case WM_SYSKEYDOWN:
 		case WM_SYSKEYUP:
 		case WM_KEYUP:
@@ -1136,7 +1154,7 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 
 	DragAcceptFiles(hWnd,true);
 
-
+	move_timer_id = 1;
 }
 
 void OS_Windows::set_clipboard(const String& p_text) {

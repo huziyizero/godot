@@ -1445,12 +1445,12 @@ Variant::operator unsigned char() const {
 
 	return 0;
 }
-#ifndef CHARTYPE_16BITS
+
 Variant::operator CharType() const {
 
 	return operator unsigned int();
 }
-#endif
+
 
 Variant::operator float() const {
 
@@ -1559,72 +1559,78 @@ Variant::operator String() const {
 		case VECTOR2_ARRAY: {
 
 			DVector<Vector2> vec = operator DVector<Vector2>();
-			String str;
+			String str("[");
 			for(int i=0;i<vec.size();i++) {
 
 				if (i>0)
 					str+=", ";
 				str=str+Variant( vec[i] );
 			}
+			str += "]";
 			return str;
 		} break;
 		case VECTOR3_ARRAY: {
 
 			DVector<Vector3> vec = operator DVector<Vector3>();
-			String str;
+			String str("[");
 			for(int i=0;i<vec.size();i++) {
 
 				if (i>0)
 					str+=", ";
 				str=str+Variant( vec[i] );
 			}
+			str += "]";
 			return str;
 		} break;
 		case STRING_ARRAY: {
 
 			DVector<String> vec = operator DVector<String>();
-			String str;
+			String str("[");
 			for(int i=0;i<vec.size();i++) {
 
 				if (i>0)
 					str+=", ";
 				str=str+vec[i];
 			}
+			str += "]";
 			return str;
 		} break;
 		case INT_ARRAY: {
 
 			DVector<int> vec = operator DVector<int>();
-			String str;
+			String str("[");
 			for(int i=0;i<vec.size();i++) {
 
 				if (i>0)
 					str+=", ";
 				str=str+itos(vec[i]);
 			}
+			str += "]";
 			return str;
 		} break;
 		case REAL_ARRAY: {
 
 			DVector<real_t> vec = operator DVector<real_t>();
-			String str;
+			String str("[");
 			for(int i=0;i<vec.size();i++) {
 
 				if (i>0)
 					str+=", ";
 				str=str+rtos(vec[i]);
 			}
+			str += "]";
 			return str;
 		} break;
 		case ARRAY: {
 
 			Array arr = operator Array();
-			String str;
+			String str("[");
 			for (int i=0; i<arr.size(); i++) {
 				if (i)
 					str+=", ";
 				str += String(arr[i]);
 			};
+			str += "]";
 			return str;
 
 		} break;
@@ -3029,9 +3035,9 @@ String Variant::get_call_error_text(Object* p_base, const StringName& p_method,c
 		int errorarg=ce.argument;
 		err_text="Cannot convert argument "+itos(errorarg+1)+" from "+Variant::get_type_name(p_argptrs[errorarg]->get_type())+" to "+Variant::get_type_name(ce.expected)+".";
 	} else if (ce.error==Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS) {
-		err_text="Expected "+itos(ce.argument)+" arguments.";
+		err_text="Method expected "+itos(ce.argument)+" arguments, but called with "+itos(p_argcount)+".";
 	} else if (ce.error==Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS) {
-		err_text="Expected "+itos(ce.argument)+" arguments.";
+		err_text="Method expected "+itos(ce.argument)+" arguments, but called with "+itos(p_argcount)+".";
 	} else if (ce.error==Variant::CallError::CALL_ERROR_INVALID_METHOD) {
 		err_text="Method not found.";
 	} else if (ce.error==Variant::CallError::CALL_ERROR_INSTANCE_IS_NULL) {

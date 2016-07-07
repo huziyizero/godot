@@ -164,12 +164,14 @@ void ScenesDock::_notification(int p_what) {
 				if (split_mode) {
 
 					file_list_vb->hide();
+					tree->set_custom_minimum_size(Size2(0,0));
 					tree->set_v_size_flags(SIZE_EXPAND_FILL);
 					button_back->show();
 				} else {
 
 					tree->show();
 					file_list_vb->show();
+					tree->set_custom_minimum_size(Size2(0,200)*EDSCALE);
 					tree->set_v_size_flags(SIZE_FILL);
 					button_back->hide();
 					if (!EditorFileSystem::get_singleton()->is_scanning()) {
@@ -187,6 +189,7 @@ void ScenesDock::_notification(int p_what) {
 			initialized=true;
 
 			EditorFileSystem::get_singleton()->connect("filesystem_changed",this,"_fs_changed");
+			EditorResourcePreview::get_singleton()->connect("preview_invalidated",this,"_preview_invalidated");
 
 			button_reload->set_icon( get_icon("Reload","EditorIcons"));
 			button_favorite->set_icon( get_icon("Favorites","EditorIcons"));
@@ -454,8 +457,7 @@ void ScenesDock::_update_files(bool p_keep_selection) {
 		files->set_icon_mode(ItemList::ICON_MODE_TOP);
 		files->set_fixed_column_width(thumbnail_size*3/2);
 		files->set_max_text_lines(2);
-		files->set_min_icon_size(Size2(thumbnail_size,thumbnail_size));
-		files->set_max_icon_size(Size2(thumbnail_size,thumbnail_size));
+		files->set_fixed_icon_size(Size2(thumbnail_size,thumbnail_size));
 
 		if (!has_icon("ResizedFolder","EditorIcons")) {
 			Ref<ImageTexture> folder = get_icon("FolderBig","EditorIcons");
@@ -485,7 +487,7 @@ void ScenesDock::_update_files(bool p_keep_selection) {
 		files->set_max_columns(1);
 		files->set_max_text_lines(1);
 		files->set_fixed_column_width(0);
-		files->set_min_icon_size(Size2());
+		files->set_fixed_icon_size(Size2());
 
 	}
 
@@ -662,6 +664,27 @@ void ScenesDock::_go_to_dir(const String& p_dir){
 
 
 }
+
+void ScenesDock::_preview_invalidated(const String& p_path) {
+
+	if (p_path.get_base_dir()==path && search_box->get_text()==String() && file_list_vb->is_visible()) {
+
+
+		for(int i=0;i<files->get_item_count();i++) {
+
+			if (files->get_item_metadata(i)==p_path) {
+				//re-request preview
+				Array udata;
+				udata.resize(2);
+				udata[0]=i;
+				udata[1]=files->get_item_text(i);
+				EditorResourcePreview::get_singleton()->queue_resource_preview(p_path,this,"_thumbnail_done",udata);
+				break;
+			}
+		}
+	}
+}
+
 void ScenesDock::_fs_changed() {
 
 	button_hist_prev->set_disabled(history_pos==0);
@@ -1619,6 +1642,9 @@ void ScenesDock::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("drop_data_fw"), &ScenesDock::drop_data_fw);
 	ObjectTypeDB::bind_method(_MD("_files_list_rmb_select"),&ScenesDock::_files_list_rmb_select);
 
+	ObjectTypeDB::bind_method(_MD("_preview_invalidated"),&ScenesDock::_preview_invalidated);
+
+
 	ADD_SIGNAL(MethodInfo("instance"));
 	ADD_SIGNAL(MethodInfo("open"));
 
@@ -1669,7 +1695,7 @@ ScenesDock::ScenesDock(EditorNode *p_editor) {
 
 	button_favorite->set_focus_mode(FOCUS_NONE);
 
-	Control *spacer = memnew( Control);
+//	Control *spacer = memnew( Control);
 
 
 
@@ -1703,7 +1729,6 @@ ScenesDock::ScenesDock(EditorNode *p_editor) {
 
 	tree->set_hide_root(true);
 	split_box->add_child(tree);
-	tree->set_custom_minimum_size(Size2(0,200)*EDSCALE);
 	tree->set_drag_forwarding(this);
 
 

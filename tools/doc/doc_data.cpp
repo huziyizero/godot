@@ -440,6 +440,12 @@ void DocData::generate(bool p_basic_types) {
 	}
 
 
+	{
+		//so it can be documented that it does not exist
+		class_list["Variant"]=ClassDoc();
+		class_list["Variant"].name="Variant";
+	}
+
 	if (!p_basic_types)
 		return;
 
@@ -942,6 +948,8 @@ Error DocData::save(const String& p_path) {
 		_write_string(f,1,"</description>");
 		_write_string(f,1,"<methods>");
 
+		c.methods.sort();
+
 		for(int i=0;i<c.methods.size();i++) {
 
 			MethodDoc &m=c.methods[i];
@@ -984,6 +992,8 @@ Error DocData::save(const String& p_path) {
 		if (c.properties.size()) {
 			_write_string(f,1,"<members>");
 
+			c.properties.sort();
+
 			for(int i=0;i<c.properties.size();i++) {
 
 
@@ -998,6 +1008,8 @@ Error DocData::save(const String& p_path) {
 		}
 
 		if (c.signals.size()) {
+
+			c.signals.sort();
 
 			_write_string(f,1,"<signals>");
 			for(int i=0;i<c.signals.size();i++) {
@@ -1025,6 +1037,7 @@ Error DocData::save(const String& p_path) {
 
 		_write_string(f,1,"<constants>");
 
+
 		for(int i=0;i<c.constants.size();i++) {
 
 			ConstantDoc &k=c.constants[i];
@@ -1037,6 +1050,9 @@ Error DocData::save(const String& p_path) {
 		_write_string(f,1,"</constants>");
 
 		if (c.theme_properties.size()) {
+
+			c.theme_properties.sort();
+
 			_write_string(f,1,"<theme_items>");
 			for(int i=0;i<c.theme_properties.size();i++) {
 

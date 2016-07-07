@@ -32,7 +32,7 @@ ScriptLanguage *ScriptServer::_languages[MAX_LANGUAGES];
 int ScriptServer::_language_count=0;
 
 bool ScriptServer::scripting_enabled=true;
-
+bool ScriptServer::reload_scripts_on_save=false;
 
 void Script::_notification( int p_what) {
 
@@ -85,12 +85,52 @@ void ScriptServer::register_language(ScriptLanguage *p_language) {
 	_languages[_language_count++]=p_language;
 }
 
+void ScriptServer::unregister_language(ScriptLanguage *p_language) {
+
+
+	for(int i=0;i<_language_count;i++) {
+		if (_languages[i]==p_language) {
+			_language_count--;
+			if (i<_language_count) {
+				SWAP(_languages[i],_languages[_language_count]);
+			}
+			return;
+		}
+	}
+}
+
 void ScriptServer::init_languages() {
 
 	for(int i=0;i<_language_count;i++) {
 		_languages[i]->init();
 	}
 }
+
+void ScriptServer::set_reload_scripts_on_save(bool p_enable) {
+
+	reload_scripts_on_save=p_enable;
+}
+
+bool ScriptServer::is_reload_scripts_on_save_enabled() {
+
+	return reload_scripts_on_save;
+}
+
+void ScriptServer::thread_enter() {
+
+	for(int i=0;i<_language_count;i++) {
+		_languages[i]->thread_enter();
+	}
+}
+
+void ScriptServer::thread_exit() {
+
+	for(int i=0;i<_language_count;i++) {
+		_languages[i]->thread_exit();
+	}
+
+}
+
 
 void ScriptInstance::get_property_state(List<Pair<StringName, Variant> > &state) {
 

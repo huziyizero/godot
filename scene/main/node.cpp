@@ -283,7 +283,11 @@ void Node::move_child(Node *p_child,int p_pos) {
 	ERR_FAIL_INDEX( p_pos, data.children.size()+1 );
 	ERR_EXPLAIN("child is not a child of this node.");
 	ERR_FAIL_COND(p_child->data.parent!=this);
-	ERR_FAIL_COND(data.blocked>0);
+	if (data.blocked>0) {
+		ERR_EXPLAIN("Parent node is busy setting up children, move_child() failed. Consider using call_deferred(\"move_child\") instead (or \"popup\" if this is from a popup).");
+		ERR_FAIL_COND(data.blocked>0);
+	}
+
 
 	data.children.remove( p_child->data.pos );
 	data.children.insert( p_pos, p_child );
@@ -739,6 +743,12 @@ void Node::add_child(Node *p_child, bool p_legible_unique_name) {
 	}
 	ERR_EXPLAIN("Can't add child, already has a parent");
 	ERR_FAIL_COND( p_child->data.parent );
+
+	if (data.blocked>0) {
+		ERR_EXPLAIN("Parent node is busy setting up children, add_node() failed. Consider using call_deferred(\"add_child\",child) instead.");
+		ERR_FAIL_COND(data.blocked>0);
+	}
+
 	ERR_EXPLAIN("Can't add child while a notification is happening");
 	ERR_FAIL_COND( data.blocked > 0 );
 
@@ -800,7 +810,10 @@ void Node::_propagate_validate_owner() {
 void Node::remove_child(Node *p_child) {
 
 	ERR_FAIL_NULL(p_child);
-	ERR_FAIL_COND( data.blocked > 0 );
+	if (data.blocked>0) {
+		ERR_EXPLAIN("Parent node is busy setting up children, remove_node() failed. Consider using call_deferred(\"remove_child\",child) instead.");
+		ERR_FAIL_COND(data.blocked>0);
+	}
 
 	int idx=-1;
 	for (int i=0;i<data.children.size();i++) {
@@ -1500,7 +1513,7 @@ int Node::get_position_in_parent() const {
 
 
 
-Node *Node::duplicate(bool p_use_instancing) const {
+Node *Node::_duplicate(bool p_use_instancing) const {
 
 
 	Node *node=NULL;
@@ -1579,7 +1592,19 @@ Node *Node::duplicate(bool p_use_instancing) const {
 		node->add_child(dup);
 	}
 
+
 	return node;
+}
+
+Node *Node::duplicate(bool p_use_instancing) const {
+
+	Node* dupe = _duplicate(p_use_instancing);
+
+	if (dupe) {
+		_duplicate_signals(this,dupe);
+	}
+
+	return dupe;
 }
 
 
@@ -1651,11 +1676,12 @@ void Node::_duplicate_and_reown(Node* p_new_parent, const Map<Node*,Node*>& p_re
 
 void Node::_duplicate_signals(const Node* p_original,Node* p_copy) const {
 
-	if (this!=p_original && get_owner()!=p_original)
+	if (this!=p_original && (get_owner()!=p_original && get_owner()!=p_original->get_owner()))
 		return;
 
 	List<Connection> conns;
 	get_all_signal_connections(&conns);
+
 
 	for (List<Connection>::Element *E=conns.front();E;E=E->next()) {
 
@@ -1665,14 +1691,17 @@ void Node::_duplicate_signals(const Node* p_original,Node* p_copy) const {
 			Node *copy = p_copy->get_node(p);
 
 			Node *target = E->get().target->cast_to<Node>();
-			if (!target)
+			if (!target) {
 				continue;
+			}
 			NodePath ptarget = p_original->get_path_to(target);
 			Node *copytarget = p_copy->get_node(ptarget);
+
 
 			if (copy && copytarget) {
 				copy->connect(E->get().signal,copytarget,E->get().method,E->get().binds,CONNECT_PERSIST);
 			}
+
 		}
 	}
 
@@ -1770,6 +1799,8 @@ void Node::replace_by(Node* p_node,bool p_keep_data) {
 		}
 	}
 
+	_replace_connections_target(p_node);
+
 	if (data.owner) {
 		for(int i=0;i<get_child_count();i++)
 			find_owned_by(data.owner,get_child(i),&owned_by_owner);
@@ -1806,6 +1837,20 @@ void Node::replace_by(Node* p_node,bool p_keep_data) {
 		p_node->set(E->get().name,E->get().value);
 	}
 
+}
+
+void Node::_replace_connections_target(Node* p_new_target) {
+
+	List<Connection> cl;
+	get_signals_connected_to_this(&cl);
+
+	for(List<Connection>::Element *E=cl.front();E;E=E->next()) {
+
+		Connection &c=E->get();
+
+		c.source->disconnect(c.signal,this,c.method);
+		c.source->connect(c.signal,p_new_target,c.method,c.binds,c.flags);
+	}
 }
 
 Vector<Variant> Node::make_binds(VARIANT_ARG_DECLARE) {
@@ -2052,6 +2097,19 @@ void Node::update_configuration_warning() {
 
 }
 
+bool Node::is_owned_by_parent() const {
+	return data.parent_owned;
+}
+
+void Node::set_display_folded(bool p_folded) {
+	data.display_folded=p_folded;
+}
+
+bool Node::is_displayed_folded() const {
+
+	return data.display_folded;
+}
+
 void Node::_bind_methods() {
 
 	ObjectTypeDB::bind_method(_MD("_add_child_below_node","node:Node","child_node:Node","legible_unique_name"),&Node::add_child_below_node,DEFVAL(false));
@@ -2107,6 +2165,8 @@ void Node::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("can_process"),&Node::can_process);
 	ObjectTypeDB::bind_method(_MD("print_stray_nodes"),&Node::_print_stray_nodes);
 	ObjectTypeDB::bind_method(_MD("get_position_in_parent"),&Node::get_position_in_parent);
+	ObjectTypeDB::bind_method(_MD("set_display_folded","fold"),&Node::set_display_folded);
+	ObjectTypeDB::bind_method(_MD("is_displayed_folded"),&Node::is_displayed_folded);
 
 	ObjectTypeDB::bind_method(_MD("get_tree:SceneTree"),&Node::get_tree);
 
@@ -2161,6 +2221,7 @@ void Node::_bind_methods() {
 	//ADD_PROPERTYNZ( PropertyInfo( Variant::BOOL, "process/input" ), _SCS("set_process_input"),_SCS("is_processing_input" ) );
 	//ADD_PROPERTYNZ( PropertyInfo( Variant::BOOL, "process/unhandled_input" ), _SCS("set_process_unhandled_input"),_SCS("is_processing_unhandled_input" ) );
 	ADD_PROPERTYNZ( PropertyInfo( Variant::INT, "process/pause_mode",PROPERTY_HINT_ENUM,"Inherit,Stop,Process" ), _SCS("set_pause_mode"),_SCS("get_pause_mode" ) );
+	ADD_PROPERTYNZ( PropertyInfo( Variant::BOOL, "editor/display_folded",PROPERTY_HINT_NONE,"",PROPERTY_USAGE_NOEDITOR ), _SCS("set_display_folded"),_SCS("is_displayed_folded" ) );
 
 	BIND_VMETHOD( MethodInfo("_process",PropertyInfo(Variant::REAL,"delta")) );
 	BIND_VMETHOD( MethodInfo("_fixed_process",PropertyInfo(Variant::REAL,"delta")) );
@@ -2198,6 +2259,7 @@ Node::Node() {
 	data.in_constructor=true;
 	data.viewport=NULL;
 	data.use_placeholder=false;
+	data.display_folded=false;
 }
 
 Node::~Node() {
@@ -2206,6 +2268,7 @@ Node::~Node() {
 	data.grouped.clear();
 	data.owned.clear();
 	data.children.clear();
+
 
 	ERR_FAIL_COND(data.parent);
 	ERR_FAIL_COND(data.children.size());

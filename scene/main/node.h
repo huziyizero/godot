@@ -111,6 +111,7 @@ private:
 		bool in_constructor;
 		bool use_placeholder;
 
+		bool display_folded;
 
 	} data;
 
@@ -121,7 +122,7 @@ private:
 	Node *_get_node(const NodePath& p_path) const;
 	Node *_get_child_by_name(const StringName& p_name) const;
 
-
+	void _replace_connections_target(Node* p_new_target);
 
 	void _validate_child_name(Node *p_name, bool p_force_human_readable=false);
 
@@ -137,6 +138,8 @@ private:
 
 	void _duplicate_signals(const Node* p_original,Node* p_copy) const;
 	void _duplicate_and_reown(Node* p_new_parent, const Map<Node*,Node*>& p_reown_map) const;
+	Node *_duplicate(bool p_use_instancing) const;
+
 	Array _get_children() const;
 	Array _get_groups() const;
 
@@ -313,6 +316,8 @@ public:
 	NodePath get_import_path() const;
 #endif
 
+	bool is_owned_by_parent() const;
+
 	void get_argument_options(const StringName& p_function,int p_idx,List<String>*r_options) const;
 
 	void clear_internal_tree_resource_paths();
@@ -323,6 +328,8 @@ public:
 
 	void update_configuration_warning();
 
+	void set_display_folded(bool p_folded);
+	bool is_displayed_folded() const;
 	/* CANVAS */
 
 	Node();
