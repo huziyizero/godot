@@ -973,21 +973,11 @@ int Tree::draw_item(const Point2i& p_pos,const Point2& p_draw_ofs, const Size2& 
 
 	/* Draw label, if height fits */
 
-	Point2i guide_from;
 
 		bool skip=(p_item==root && hide_root);
-   // printf("skip (%p == %p && %i) %i\n",p_item,root,hide_root,skip);
 
 
 	if (!skip && (p_pos.y+label_h-cache.offset.y)>0) {
-
-	  //  printf("entering\n");
-
-		int height=label_h;
-
-		Point2i guide_space=Point2i( cache.guide_width , height );
-
-
 
 		if (!hide_folding && p_item->childs) { //has childs, draw the guide box
 
@@ -1345,7 +1335,7 @@ int Tree::_count_selected_items(TreeItem* p_from) const {
 	return count;
 
 }
-void Tree::select_single_item(TreeItem *p_selected,TreeItem *p_current,int p_col,TreeItem *p_prev,bool *r_in_range) {
+void Tree::select_single_item(TreeItem *p_selected, TreeItem *p_current, int p_col, TreeItem *p_prev, bool *r_in_range, bool p_force_deselect) {
 
 	TreeItem::Cell &selected_cell=p_selected->cells[p_col];
 
@@ -1419,7 +1409,7 @@ void Tree::select_single_item(TreeItem *p_selected,TreeItem *p_current,int p_col
 			} else {
 
 
-				if (r_in_range && *r_in_range) {
+				if (r_in_range && *r_in_range && !p_force_deselect) {
 
 
 					if (!c.selected && c.selectable) {
@@ -1427,7 +1417,7 @@ void Tree::select_single_item(TreeItem *p_selected,TreeItem *p_current,int p_col
 						emit_signal("multi_selected",p_current,i,true);
 					}
 
-				} else if (!r_in_range){
+				} else if (!r_in_range || p_force_deselect){
 					if (select_mode==SELECT_MULTI && c.selected)
 						emit_signal("multi_selected",p_current,i,false);
 					c.selected=false;
@@ -1446,7 +1436,7 @@ void Tree::select_single_item(TreeItem *p_selected,TreeItem *p_current,int p_col
 
 	while (c) {
 
-		select_single_item(p_selected,c,p_col,p_prev,r_in_range);
+		select_single_item(p_selected,c,p_col,p_prev,r_in_range,p_current->is_collapsed() || p_force_deselect);
 		c=c->next;
 	}
 
@@ -1660,7 +1650,6 @@ int Tree::propagate_mouse_event(const Point2i &p_pos,int x_ofs,int y_ofs,bool p_
 		/* editing */
 
 		bool bring_up_editor=force_select_on_already_selected ? (c.selected && already_selected) : c.selected;
-		bool bring_up_value_editor=false;
 		String editor_text=c.text;
 
 		switch (c.mode) {
@@ -1711,9 +1700,6 @@ int Tree::propagate_mouse_event(const Point2i &p_pos,int x_ofs,int y_ofs,bool p_
 					bring_up_editor=false;
 				} else {
 
-					Ref<Texture> updown = cache.updown;
-
-
 					if (x >= (col_width-item_h/2)) {
 
 						/* touching the combo */
@@ -1760,7 +1746,6 @@ int Tree::propagate_mouse_event(const Point2i &p_pos,int x_ofs,int y_ofs,bool p_
 					}  else {
 
 						editor_text=String::num( p_item->cells[col].val, Math::decimals( p_item->cells[col].step ) );
-						bring_up_value_editor=false;
 						if (select_mode==SELECT_MULTI && get_tree()->get_last_event_id() == focus_in_id)
 							bring_up_editor=false;
 

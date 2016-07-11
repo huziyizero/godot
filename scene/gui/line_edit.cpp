@@ -31,6 +31,7 @@
 #include "os/os.h"
 #include "print_string.h"
 #include "label.h"
+#include "translation.h"
 #ifdef TOOLS_ENABLED
 #include "tools/editor/editor_settings.h"
 #endif
@@ -947,7 +948,7 @@ String LineEdit::get_text() const {
 
 void LineEdit::set_placeholder(String p_text) {
 
-	placeholder = p_text;
+	placeholder = XL_MESSAGE(p_text);
 	update();
 }
 
@@ -980,10 +981,6 @@ void LineEdit::set_cursor_pos(int p_pos) {
 
 	cursor_pos=p_pos;
 
-//	if (cursor_pos>(window_pos+get_window_length())) {
-//	set_window_pos(cursor_pos-get_window_lengt//h());
-//	}
-
 	if (!is_inside_tree()) {
 
 		window_pos=cursor_pos;
@@ -1002,7 +999,6 @@ void LineEdit::set_cursor_pos(int p_pos) {
 
 		if (window_width<0)
 			return;
-		int width_to_cursor=0;
 		int wp=window_pos;
 
 		if (font.is_valid()) {
