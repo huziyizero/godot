@@ -120,7 +120,11 @@ friend class GDScriptLanguage;
 	virtual void _placeholder_erased(PlaceHolderScriptInstance *p_placeholder);
 #endif
 
+#ifdef DEBUG_ENABLED
 
+	Map<ObjectID,List<Pair<StringName,Variant> > > pending_reload_state;
+
+#endif
 
 	bool _update_exports();
 
@@ -176,6 +180,10 @@ public:
 	Vector<uint8_t> get_as_byte_code() const;
 
 	bool get_property_default_value(const StringName& p_property,Variant& r_value) const;
+
+	virtual void get_method_list(List<MethodInfo> *p_list) const;
+	virtual bool has_method(const StringName& p_method) const;
+	virtual MethodInfo get_method_info(const StringName& p_method) const;
 
 	virtual ScriptLanguage *get_language() const;
 
@@ -264,6 +272,8 @@ class GDScriptLanguage : public ScriptLanguage {
 
 
 	Mutex *lock;
+
+
 
 friend class GDScript;
 
@@ -367,7 +377,7 @@ public:
 	virtual void get_reserved_words(List<String> *p_words) const;
 	virtual void get_comment_delimiters(List<String> *p_delimiters) const;
 	virtual void get_string_delimiters(List<String> *p_delimiters) const;
-	virtual String get_template(const String& p_class_name, const String& p_base_class_name) const;
+	virtual Ref<Script> get_template(const String& p_class_name, const String& p_base_class_name) const;
 	virtual bool validate(const String& p_script,int &r_line_error,int &r_col_error,String& r_test_error, const String& p_path="",List<String> *r_functions=NULL) const;
 	virtual Script *create_script() const;
 	virtual bool has_named_classes() const;

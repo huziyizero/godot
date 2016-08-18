@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<doc version="2.1.alpha.custom_build" name="Engine Types">
+<doc version="2.2.alpha.custom_build" name="Engine Types">
 <class name="@GDScript" category="Core">
 	<brief_description>
 		Built-in GDScript functions.
@@ -653,14 +653,14 @@
 			</description>
 		</method>
 		<method name="yield">
-			<return type="Nil">
+			<return type="GDFunctionState">
 			</return>
 			<argument index="0" name="object" type="Object">
 			</argument>
 			<argument index="1" name="signal" type="String">
 			</argument>
 			<description>
-				Stop the function execution and return the current state. Call resume on the state to resume execution. This makes the state invalid.
+				Stop the function execution and return the current state. Call [method GDFunctionState.resume] on the state to resume execution. This invalidates the state.
 				Returns anything that was passed to the resume function call. If passed an object and a signal, the execution is resumed when the object's signal is emmited.
 			</description>
 		</method>
@@ -1945,6 +1945,16 @@
 		</constant>
 	</constants>
 </class>
+<class name="@VisualScript" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+	</methods>
+	<constants>
+	</constants>
+</class>
 <class name="AABB" category="Built-In Types">
 	<brief_description>
 		Axis-Aligned Bounding Box.
@@ -2255,6 +2265,7 @@
 			<return type="String">
 			</return>
 			<description>
+				Return the name of the current animation set to the node.
 			</description>
 		</method>
 		<method name="get_frame" qualifiers="const">
@@ -2310,18 +2321,21 @@
 			<return type="bool">
 			</return>
 			<description>
+				Return true if an animation if currently being played.
 			</description>
 		</method>
 		<method name="play">
 			<argument index="0" name="anim" type="String" default="&quot;&quot;">
 			</argument>
 			<description>
+				Play the animation set in parameter. If no parameter is provided, the current animation is played.
 			</description>
 		</method>
 		<method name="set_animation">
 			<argument index="0" name="animation" type="String">
 			</argument>
 			<description>
+				Set the current animation of the node and reinits the frame counter of the animation.
 			</description>
 		</method>
 		<method name="set_centered">
@@ -2375,13 +2389,14 @@
 		</method>
 		<method name="stop">
 			<description>
+				Stop the current animation (does not reset the frame counter).
 			</description>
 		</method>
 	</methods>
 	<signals>
 		<signal name="frame_changed">
 			<description>
-				Emmited when frame is changed.
+				Emitted when frame is changed.
 			</description>
 		</signal>
 	</signals>
@@ -2398,58 +2413,68 @@
 			<return type="String">
 			</return>
 			<description>
+				Return the name of the current animation set to the node.
 			</description>
 		</method>
 		<method name="get_frame" qualifiers="const">
 			<return type="int">
 			</return>
 			<description>
+				Return the visible frame index.
 			</description>
 		</method>
 		<method name="get_sprite_frames" qualifiers="const">
 			<return type="SpriteFrames">
 			</return>
 			<description>
+				Get the [SpriteFrames] resource, which contains all frames.
 			</description>
 		</method>
 		<method name="is_playing" qualifiers="const">
 			<return type="bool">
 			</return>
 			<description>
+				Return true if an animation if currently being played.
 			</description>
 		</method>
 		<method name="play">
 			<argument index="0" name="anim" type="String" default="&quot;&quot;">
 			</argument>
 			<description>
+				Play the animation set in parameter. If no parameter is provided, the current animation is played.
 			</description>
 		</method>
 		<method name="set_animation">
 			<argument index="0" name="animation" type="String">
 			</argument>
 			<description>
+				Set the current animation of the node and reinits the frame counter of the animation.
 			</description>
 		</method>
 		<method name="set_frame">
 			<argument index="0" name="frame" type="int">
 			</argument>
 			<description>
+				Set the visible sprite frame index (from the list of frames inside the [SpriteFrames] resource).
 			</description>
 		</method>
 		<method name="set_sprite_frames">
 			<argument index="0" name="sprite_frames" type="SpriteFrames">
 			</argument>
 			<description>
+				Set the [SpriteFrames] resource, which contains all frames.
 			</description>
 		</method>
 		<method name="stop">
 			<description>
+				Stop the current animation (does not reset the frame counter).
 			</description>
 		</method>
 	</methods>
 	<signals>
 		<signal name="frame_changed">
 			<description>
+				Emitted when frame is changed.
 			</description>
 		</signal>
 	</signals>
@@ -2487,6 +2512,7 @@
 			<argument index="0" name="path" type="NodePath">
 			</argument>
 			<description>
+				Return the index of the specified track. If the track is not found, return -1.
 			</description>
 		</method>
 		<method name="get_length" qualifiers="const">
@@ -2500,6 +2526,7 @@
 			<return type="float">
 			</return>
 			<description>
+				Get the animation step value.
 			</description>
 		</method>
 		<method name="get_track_count" qualifiers="const">
@@ -2576,6 +2603,7 @@
 			<argument index="0" name="size_sec" type="float">
 			</argument>
 			<description>
+				Set the animation step value.
 			</description>
 		</method>
 		<method name="track_find_key" qualifiers="const">
@@ -2677,6 +2705,7 @@
 			<argument index="0" name="idx" type="int">
 			</argument>
 			<description>
+				Return true if the given track is imported. Else, return false.
 			</description>
 		</method>
 		<method name="track_move_down">
@@ -2717,6 +2746,7 @@
 			<argument index="1" name="imported" type="bool">
 			</argument>
 			<description>
+				Set the given track as imported or not.
 			</description>
 		</method>
 		<method name="track_set_interpolation_type">
@@ -4526,6 +4556,15 @@
 				Searches the array in reverse order for a value and returns its index or -1 if not found.
 			</description>
 		</method>
+		<method name="has">
+			<return type="bool">
+			</return>
+			<argument index="0" name="value" type="var">
+			</argument>
+			<description>
+				Return true if the array contains given value. [code][ "inside", 7 ].has("inside") == true, [ "inside", 7 ].has("outside") == false, [ "inside", 7 ].has(7) == true, [ "inside", 7 ].has("7") == false[/code]
+			</description>
+		</method>
 		<method name="hash">
 			<return type="int">
 			</return>
@@ -5987,7 +6026,7 @@
 			</argument>
 			<argument index="2" name="rect" type="Rect2">
 			</argument>
-			<argument index="3" name="align" type="Vector2" default="Vector2(0,0)">
+			<argument index="3" name="align" type="Vector2" default="Vector2((0, 0))">
 			</argument>
 			<argument index="4" name="advance" type="float" default="-1">
 			</argument>
@@ -6667,6 +6706,11 @@
 		This node is intended to be a simple helper get get things going quickly and it may happen often that more functionality is desired to change how the camera works. To make your own custom camera node, simply inherit from [Node2D] and change the transform of the canvas by calling get_viewport().set_canvas_transform(m) in [Viewport].
 	</description>
 	<methods>
+		<method name="align">
+			<description>
+				Align the camera to the tracked node
+			</description>
+		</method>
 		<method name="clear_current">
 			<description>
 			</description>
@@ -6674,17 +6718,6 @@
 		<method name="force_update_scroll">
 			<description>
 				Force the camera to update scroll immediately.
-			</description>
-		</method>
-		<method name="reset_smoothing">
-			<description>
-			Set the camera's position immediately to its current smoothing destination.
-			This has no effect if smoothing is disabled.
-			</description>
-		</method>
-		<method name="align">
-			<description>
-			Align the camera to the tracked node
 			</description>
 		</method>
 		<method name="get_anchor_mode" qualifiers="const">
@@ -6789,6 +6822,12 @@
 		<method name="make_current">
 			<description>
 				Make this the current 2D camera for the scene (viewport and layer), in case there's many cameras in the scene.
+			</description>
+		</method>
+		<method name="reset_smoothing">
+			<description>
+				Set the camera's position immediately to its current smoothing destination.
+				This has no effect if smoothing is disabled.
 			</description>
 		</method>
 		<method name="set_anchor_mode">
@@ -7261,6 +7300,14 @@
 				Return true if this CanvasItem is visible. It may be invisible because itself or a parent canvas item is hidden.
 			</description>
 		</method>
+		<method name="make_canvas_pos_local" qualifiers="const">
+			<return type="Vector2">
+			</return>
+			<argument index="0" name="screen_point" type="Vector2">
+			</argument>
+			<description>
+			</description>
+		</method>
 		<method name="make_input_local" qualifiers="const">
 			<return type="InputEvent">
 			</return>
@@ -7339,22 +7386,6 @@
 			</description>
 		</method>
 		<method name="update">
-		<method name="make_screen_coord_local" qualifiers="const">
-			<return type="Vector2">
-			</return>
-			<argument index="0" name="screen_point" type="Vector2">
-			</argument>
-			<description>
-				Take a 2d screen point and convert to 2D local coords relative to this Canvas
-				 item.  If this CanvasItem is the root of a Scene, its essentially the 
-				 world coords for that scene.
-			</description>
-		</method>
-		<method name="make_input_local" qualifiers="const">
-			<return type="InputEvent">
-			</return>
-			<argument index="0" name="event" type="InputEvent">
-			</argument>
 			<description>
 				Queue the CanvasItem for update. [code]NOTIFICATION_DRAW[/code] will be called on idle time to request redraw.
 			</description>
@@ -8017,7 +8048,7 @@
 		<method name="add_shape">
 			<argument index="0" name="shape" type="Shape2D">
 			</argument>
-			<argument index="1" name="transform" type="Matrix32" default="1,0, 0,1, 0,0">
+			<argument index="1" name="transform" type="Matrix32" default="((1, 0), (0, 1), (0, 0))">
 			</argument>
 			<description>
 				Add a [Shape2D] to the collision body, with a given custom transform.
@@ -8648,7 +8679,7 @@
 			<return type="bool">
 			</return>
 			<description>
-				Returns whether this color picker is in raw mode or not
+				Returns whether this color picker is in raw mode or not, raw mode will allow the color R, G, B component values to go beyond 1, you have to consider that the max value for color components is 1, going beyond that value will not have effect in the color, but can be used for special operations that require it (like tinting without darkening or rendering sprites in HDR).
 			</description>
 		</method>
 		<method name="set_color">
@@ -8669,7 +8700,7 @@
 			<argument index="0" name="mode" type="bool">
 			</argument>
 			<description>
-				When set to true, every color channel will be represented as a value from 0 to 1, insetead of 0, 255.
+				Set whether this color picker is using raw mode or not, see [method is_raw_mode].
 			</description>
 		</method>
 	</methods>
@@ -9287,7 +9318,7 @@
 		<method name="get_cursor_shape" qualifiers="const">
 			<return type="int">
 			</return>
-			<argument index="0" name="pos" type="Vector2" default="Vector2(0,0)">
+			<argument index="0" name="pos" type="Vector2" default="Vector2((0, 0))">
 			</argument>
 			<description>
 				Return the cursor shape at a certain position in the control.
@@ -9486,7 +9517,7 @@
 		<method name="get_tooltip" qualifiers="const">
 			<return type="String">
 			</return>
-			<argument index="0" name="atpos" type="Vector2" default="Vector2(0,0)">
+			<argument index="0" name="atpos" type="Vector2" default="Vector2((0, 0))">
 			</argument>
 			<description>
 				Return the tooltip, which will appear when the cursor is resting over this control.
@@ -10130,9 +10161,9 @@
 		<method name="add_point">
 			<argument index="0" name="pos" type="Vector2">
 			</argument>
-			<argument index="1" name="in" type="Vector2" default="Vector2(0,0)">
+			<argument index="1" name="in" type="Vector2" default="Vector2((0, 0))">
 			</argument>
-			<argument index="2" name="out" type="Vector2" default="Vector2(0,0)">
+			<argument index="2" name="out" type="Vector2" default="Vector2((0, 0))">
 			</argument>
 			<argument index="3" name="atpos" type="int" default="-1">
 			</argument>
@@ -10301,9 +10332,9 @@
 		<method name="add_point">
 			<argument index="0" name="pos" type="Vector3">
 			</argument>
-			<argument index="1" name="in" type="Vector3" default="Vector3(0, 0, 0)">
+			<argument index="1" name="in" type="Vector3" default="Vector3((0, 0, 0))">
 			</argument>
-			<argument index="2" name="out" type="Vector3" default="Vector3(0, 0, 0)">
+			<argument index="2" name="out" type="Vector3" default="Vector3((0, 0, 0))">
 			</argument>
 			<argument index="3" name="atpos" type="int" default="-1">
 			</argument>
@@ -10916,6 +10947,26 @@
 			<description>
 			</description>
 		</method>
+		<method name="get_spacing" qualifiers="const">
+			<return type="int">
+			</return>
+			<argument index="0" name="type" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="get_use_filter" qualifiers="const">
+			<return type="bool">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_use_mipmaps" qualifiers="const">
+			<return type="bool">
+			</return>
+			<description>
+			</description>
+		</method>
 		<method name="remove_fallback">
 			<argument index="0" name="idx" type="int">
 			</argument>
@@ -10942,8 +10993,36 @@
 			<description>
 			</description>
 		</method>
+		<method name="set_spacing">
+			<argument index="0" name="type" type="int">
+			</argument>
+			<argument index="1" name="value" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_use_filter">
+			<argument index="0" name="enable" type="bool">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_use_mipmaps">
+			<argument index="0" name="enable" type="bool">
+			</argument>
+			<description>
+			</description>
+		</method>
 	</methods>
 	<constants>
+		<constant name="SPACING_TOP" value="0">
+		</constant>
+		<constant name="SPACING_BOTTOM" value="1">
+		</constant>
+		<constant name="SPACING_CHAR" value="2">
+		</constant>
+		<constant name="SPACING_SPACE" value="3">
+		</constant>
 	</constants>
 </class>
 <class name="DynamicFontData" inherits="Resource" category="Core">
@@ -11264,12 +11343,14 @@
 	</description>
 	<methods>
 		<method name="add_control_to_bottom_panel">
+			<return type="ToolButton">
+			</return>
 			<argument index="0" name="control" type="Control">
 			</argument>
 			<argument index="1" name="title" type="String">
 			</argument>
 			<description>
-				Add a control to the bottom panel (together with Output, Debug, Animation, etc). If your plugin is being removed, also make sure to remove your control by calling [method remove_control_from_bottom_panel].
+				Add a control to the bottom panel (together with Output, Debug, Animation, etc). Returns a reference to the button added. It's up to you to hide/show the button when needed. If your plugin is being removed, also make sure to remove your control by calling [method remove_control_from_bottom_panel].
 			</description>
 		</method>
 		<method name="add_control_to_container">
@@ -11424,6 +11505,13 @@
 				Get the undo/redo object. Most actions in the editor can be undoable, so use this object to make sure this happens when it's worth it.
 			</description>
 		</method>
+		<method name="get_window_layout" qualifiers="virtual">
+			<argument index="0" name="layout" type="ConfigFile">
+			</argument>
+			<description>
+				Get the GUI layout of the plugin. This is used to save the project's editor layout when the [method EditorPlugin.queue_save_layout] is called or the editor layout was changed(For example changing the position of a dock).
+			</description>
+		</method>
 		<method name="handles" qualifiers="virtual">
 			<return type="bool">
 			</return>
@@ -11446,6 +11534,11 @@
 			<description>
 				This function will be called when the editor is requested to become visible. It is used for plugins that edit a specific object type.
 				Remember that you have to manage the visibility of all your editor controls manually.
+			</description>
+		</method>
+		<method name="queue_save_layout" qualifiers="const">
+			<description>
+				Queue save the project's editor layout.
 			</description>
 		</method>
 		<method name="remove_control_from_bottom_panel">
@@ -11483,11 +11576,23 @@
 				Remove the import plugin, don't forget to call this on exit.
 			</description>
 		</method>
+		<method name="save_external_data" qualifiers="virtual">
+			<description>
+				This method is called after the editor save the project or when the it's closed. It asks the plugin to save edited external scenes/resources.
+			</description>
+		</method>
 		<method name="set_state" qualifiers="virtual">
 			<argument index="0" name="state" type="Dictionary">
 			</argument>
 			<description>
 				Restore the state saved by [method EditorPlugin.get_state].
+			</description>
+		</method>
+		<method name="set_window_layout" qualifiers="virtual">
+			<argument index="0" name="layout" type="ConfigFile">
+			</argument>
+			<description>
+				Restore the plugin GUI layout saved by [method EditorPlugin.get_window_layout].
 			</description>
 		</method>
 	</methods>
@@ -11756,6 +11861,10 @@
 			</argument>
 			<description>
 				Add an unscaled billboard for visualization. Call this function during [method redraw].
+			</description>
+		</method>
+		<method name="clear">
+			<description>
 			</description>
 		</method>
 		<method name="commit_handle" qualifiers="virtual">
@@ -12248,7 +12357,7 @@
 		    file.open("user://save_game.dat", file.WRITE)
 		    file.store_string(content)
 		    file.close()
-		
+
 		func load():
 		    var file = File.new()
 		    file.open("user://save_game.dat", file.READ)
@@ -12632,6 +12741,12 @@
 				Get the current selected path (directory and file) of the file dialog (empty if none).
 			</description>
 		</method>
+		<method name="get_filters" qualifiers="const">
+			<return type="StringArray">
+			</return>
+			<description>
+			</description>
+		</method>
 		<method name="get_mode" qualifiers="const">
 			<return type="int">
 			</return>
@@ -12684,6 +12799,12 @@
 			</argument>
 			<description>
 				Set the current selected file path of the file dialog.
+			</description>
+		</method>
+		<method name="set_filters">
+			<argument index="0" name="filters" type="StringArray">
+			</argument>
+			<description>
 			</description>
 		</method>
 		<method name="set_mode">
@@ -13006,17 +13127,27 @@
 			<description>
 			</description>
 		</method>
+		<method name="update_changes">
+			<description>
+				After editing a font (changing size, ascent, char rects, etc.). Call this function to propagate changes to controls that might use it.
+			</description>
+		</method>
 	</methods>
 	<constants>
 	</constants>
 </class>
 <class name="FuncRef" inherits="Reference" category="Core">
 	<brief_description>
+		Reference to a function in an object.
 	</brief_description>
 	<description>
+		In GDScript, functions are not [i]first-class objects[/i]. This means it is impossible to store them directly as variables, return them from another function, or pass them as arguments.
+		However, by creating a [FuncRef] using the [method @GDScript.funcref] function, a reference to a function in a given object can be created, passed around and called.
 	</description>
 	<methods>
 		<method name="call_func">
+			<return type="Variant">
+			</return>
 			<argument index="0" name="arg0" type="Variant" default="NULL">
 			</argument>
 			<argument index="1" name="arg1" type="Variant" default="NULL">
@@ -13038,18 +13169,21 @@
 			<argument index="9" name="arg9" type="Variant" default="NULL">
 			</argument>
 			<description>
+				Call the referenced function with the given arguments. The argument count must correspond to the required number of arguments in the function. Returns the return value of the function call.
 			</description>
 		</method>
 		<method name="set_function">
 			<argument index="0" name="name" type="String">
 			</argument>
 			<description>
+				Set the name of the function to call on the object, without parentheses or any parameters.
 			</description>
 		</method>
 		<method name="set_instance">
 			<argument index="0" name="instance" type="Object">
 			</argument>
 			<description>
+				Set the object on which to call the referenced function. This object must be of a type actually inheriting from [Object], not a built-in type such as [int], [Vector2] or [Dictionary].
 			</description>
 		</method>
 	</methods>
@@ -13058,15 +13192,17 @@
 </class>
 <class name="GDFunctionState" inherits="Reference" category="Core">
 	<brief_description>
+		State of a function call after yielding.
 	</brief_description>
 	<description>
+		Calling [method @GDScript.yield] within a function will cause that function to yield and return its current state as an object of this type. The yielded function call can then be resumed later by calling [method resume] on this state object.
 	</description>
 	<methods>
 		<method name="is_valid" qualifiers="const">
 			<return type="bool">
 			</return>
 			<description>
-				Should put children to the top left corner instead of center of the container.
+				Check whether the function call may be resumed. This is not the case if the function state was already resumed.
 			</description>
 		</method>
 		<method name="resume">
@@ -13075,6 +13211,9 @@
 			<argument index="0" name="arg" type="Variant" default="NULL">
 			</argument>
 			<description>
+				Resume execution of the yielded function call.
+				If handed an argument, return the argument from the [method @GDScript.yield] call in the yielded function call. You can pass e.g. an [Array] to hand multiple arguments.
+				This function returns what the resumed function call returns, possibly another function state if yielded again.
 			</description>
 		</method>
 	</methods>
@@ -13108,6 +13247,8 @@
 			</description>
 		</method>
 		<method name="new">
+			<return type="Object">
+			</return>
 			<description>
 			</description>
 		</method>
@@ -13776,6 +13917,12 @@
 				Return the scroll offset.
 			</description>
 		</method>
+		<method name="get_snap" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
 		<method name="get_zoom" qualifiers="const">
 			<return type="float">
 			</return>
@@ -13805,11 +13952,41 @@
 				Return true is the disconnection of connections is enable in the visual GraphEdit. False otherwise.
 			</description>
 		</method>
+		<method name="is_using_snap" qualifiers="const">
+			<return type="bool">
+			</return>
+			<description>
+			</description>
+		</method>
 		<method name="set_right_disconnects">
 			<argument index="0" name="enable" type="bool">
 			</argument>
 			<description>
 				Enable the disconnection of existing connections in the visual GraphEdit by left-clicking a connection and releasing into the void.
+			</description>
+		</method>
+		<method name="set_scroll_ofs">
+			<argument index="0" name="ofs" type="Vector2">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_selected">
+			<argument index="0" name="node" type="Object">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_snap">
+			<argument index="0" name="pixels" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_use_snap">
+			<argument index="0" name="enable" type="bool">
+			</argument>
+			<description>
 			</description>
 		</method>
 		<method name="set_zoom">
@@ -13867,11 +14044,23 @@
 				Signal sent when a GraphNode is attempted to be duplicated in the GraphEdit.
 			</description>
 		</signal>
+		<signal name="node_selected">
+			<argument index="0" name="node" type="Object">
+			</argument>
+			<description>
+			</description>
+		</signal>
 		<signal name="popup_request">
 			<argument index="0" name="p_position" type="Vector2">
 			</argument>
 			<description>
 				Signal sent when a popup is requested. Happens on right-clicking in the GraphEdit. 'p_position' is the position of the mouse pointer when the signal is sent.
+			</description>
+		</signal>
+		<signal name="scroll_offset_changed">
+			<argument index="0" name="ofs" type="Vector2">
+			</argument>
+			<description>
 			</description>
 		</signal>
 	</signals>
@@ -13880,11 +14069,17 @@
 	<theme_items>
 		<theme_item name="bg" type="StyleBox">
 		</theme_item>
+		<theme_item name="grid_major" type="Color">
+		</theme_item>
+		<theme_item name="grid_minor" type="Color">
+		</theme_item>
 		<theme_item name="minus" type="Texture">
 		</theme_item>
 		<theme_item name="more" type="Texture">
 		</theme_item>
 		<theme_item name="reset" type="Texture">
+		</theme_item>
+		<theme_item name="snap" type="Texture">
 		</theme_item>
 	</theme_items>
 </class>
@@ -13976,11 +14171,23 @@
 				Return the type of the output connection 'idx'.
 			</description>
 		</method>
+		<method name="get_modulate" qualifiers="const">
+			<return type="Color">
+			</return>
+			<description>
+			</description>
+		</method>
 		<method name="get_offset" qualifiers="const">
 			<return type="Vector2">
 			</return>
 			<description>
 				Return the offset of the GraphNode.
+			</description>
+		</method>
+		<method name="get_overlay" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
 			</description>
 		</method>
 		<method name="get_slot_color_left" qualifiers="const">
@@ -14051,11 +14258,23 @@
 				Return true if right (output) slot 'idx' is enabled. False otherwise.
 			</description>
 		</method>
+		<method name="set_modulate">
+			<argument index="0" name="color" type="Color">
+			</argument>
+			<description>
+			</description>
+		</method>
 		<method name="set_offset">
 			<argument index="0" name="offset" type="Vector2">
 			</argument>
 			<description>
 				Set the offset of the GraphNode.
+			</description>
+		</method>
+		<method name="set_overlay">
+			<argument index="0" name="overlay" type="int">
+			</argument>
+			<description>
 			</description>
 		</method>
 		<method name="set_show_close_button">
@@ -14080,8 +14299,11 @@
 			</argument>
 			<argument index="6" name="color_right" type="Color">
 			</argument>
+			<argument index="7" name="custom_left" type="Object" default="Object()">
+			</argument>
+			<argument index="8" name="custom_right" type="Object" default="Object()">
+			</argument>
 			<description>
-				Set the tuple of input/output slots defined by 'idx' ID. 'left' slots are input, 'right' are output. 'type' is an integer defining the type of the slot. Refer to description for the compatibility between slot types.
 			</description>
 		</method>
 		<method name="set_title">
@@ -14119,8 +14341,16 @@
 		</signal>
 	</signals>
 	<constants>
+		<constant name="OVERLAY_DISABLED" value="0">
+		</constant>
+		<constant name="OVERLAY_BREAKPOINT" value="1">
+		</constant>
+		<constant name="OVERLAY_POSITION" value="2">
+		</constant>
 	</constants>
 	<theme_items>
+		<theme_item name="breakpoint" type="StyleBox">
+		</theme_item>
 		<theme_item name="close" type="Texture">
 		</theme_item>
 		<theme_item name="close_offset" type="int">
@@ -14134,6 +14364,8 @@
 		<theme_item name="port" type="Texture">
 		</theme_item>
 		<theme_item name="port_offset" type="int">
+		</theme_item>
+		<theme_item name="position" type="StyleBox">
 		</theme_item>
 		<theme_item name="selectedframe" type="StyleBox">
 		</theme_item>
@@ -15667,6 +15899,7 @@
 </class>
 <class name="ImmediateGeometry" inherits="GeometryInstance" category="Core">
 	<brief_description>
+		Node to draw simple geometry from code, ala OpenGL 1.x
 	</brief_description>
 	<description>
 	</description>
@@ -15679,58 +15912,69 @@
 			<argument index="2" name="radius" type="float">
 			</argument>
 			<description>
+				Simple helper to draw an uvsphere, with given latitudes, longitude and radius.
 			</description>
 		</method>
 		<method name="add_vertex">
 			<argument index="0" name="pos" type="Vector3">
 			</argument>
 			<description>
+				Add a vertex with the currently set color/uv/etc.
 			</description>
 		</method>
 		<method name="begin">
 			<argument index="0" name="primitive" type="int">
 			</argument>
-			<argument index="1" name="texture" type="Texture">
+			<argument index="1" name="texture" type="Texture" default="Object()">
 			</argument>
 			<description>
+				Begin drawing (And optionally pass a texture override). When done call end(). For more information on how this works, search for glBegin() glEnd() references.
+			For the type of primitive, use the [Mesh].PRIMITIVE_* enumerations.
 			</description>
 		</method>
 		<method name="clear">
 			<description>
+				Clear everything that was drawn using begin/end.
 			</description>
 		</method>
 		<method name="end">
 			<description>
+				Call this when done adding a batch of geometry, otherwise it can't be displayed.
 			</description>
 		</method>
 		<method name="set_color">
 			<argument index="0" name="color" type="Color">
 			</argument>
 			<description>
+				Set the color that the next vertex will use to be drawn.
 			</description>
 		</method>
 		<method name="set_normal">
 			<argument index="0" name="normal" type="Vector3">
 			</argument>
 			<description>
+				Set the normal that the next vertex will use to be drawn.
 			</description>
 		</method>
 		<method name="set_tangent">
 			<argument index="0" name="tangent" type="Plane">
 			</argument>
 			<description>
+				Set the tangent (and binormal facing) that the next vertex will use to be drawn.
 			</description>
 		</method>
 		<method name="set_uv">
 			<argument index="0" name="uv" type="Vector2">
 			</argument>
 			<description>
+				Set the UV that the next vertex will use to be drawn.
 			</description>
 		</method>
 		<method name="set_uv2">
 			<argument index="0" name="uv" type="Vector2">
 			</argument>
 			<description>
+				Set the second layer of UV that the next vertex will use to be drawn.
 			</description>
 		</method>
 	</methods>
@@ -15779,7 +16023,14 @@
 			<return type="Array">
 			</return>
 			<description>
-			Returns an [Array] containing the device IDs of all currently connected joysticks.
+				Returns an [Array] containing the device IDs of all currently connected joysticks.
+			</description>
+		</method>
+		<method name="get_gyroscope">
+			<return type="Vector3">
+			</return>
+			<description>
+				If the device has a gyroscope, this will return the rate of rotation in rad/s around a device's x, y, and z axis.
 			</description>
 		</method>
 		<method name="get_joy_axis">
@@ -15854,7 +16105,7 @@
 			<return type="Vector2">
 			</return>
 			<description>
-				Returns the mouse speed.
+				Returns the mouse speed for the last time the cursor was moved, and this until the next frame where the mouse moves. This means that even if the mouse is not moving, this function will still return the value of the last motion.
 			</description>
 		</method>
 		<method name="is_action_pressed">
@@ -15914,7 +16165,7 @@
 		<method name="set_custom_mouse_cursor">
 			<argument index="0" name="image" type="Texture">
 			</argument>
-			<argument index="1" name="hotspot" type="Vector2" default="Vector2(0,0)">
+			<argument index="1" name="hotspot" type="Vector2" default="Vector2((0, 0))">
 			</argument>
 			<description>
 				Set a custom mouse cursor image, which is only visible inside the game window. The hotspot can also be specified.
@@ -17182,20 +17433,25 @@
 </class>
 <class name="InstancePlaceholder" inherits="Node" category="Core">
 	<brief_description>
+		Placeholder for the root [Node] of a [PackedScene].
 	</brief_description>
 	<description>
+		Turning on the option [b]Load As Placeholder[/b] for an instanced scene in the editor causes it to be replaced by an InstacePlaceholder when running the game. This makes it possible to delay actually loading the scene until calling [method replace_by_instance]. This is useful to avoid loading large scenes all at once by loading parts of it selectively.
+		The InstancePlaceholder does not have a transform. This causes any child nodes to be positioned relatively to the Viewport from point (0,0), rather than their parent as displayed in the editor. Replacing the placeholder with a scene with a transform will transform children relatively to their parent again.
 	</description>
 	<methods>
 		<method name="get_instance_path" qualifiers="const">
 			<return type="String">
 			</return>
 			<description>
+				Retrieve the path to the [PackedScene] resource file that is loaded by default when calling [method replace_by_instance].
 			</description>
 		</method>
 		<method name="replace_by_instance">
 			<argument index="0" name="custom_scene" type="PackedScene" default="NULL">
 			</argument>
 			<description>
+				Replace this placeholder by the scene handed as an argument, or the original scene if no argument is given. As for all resources, the scene is loaded only if it's not loaded already. By manually loading the scene beforehand, delays caused by this function can be avoided.
 			</description>
 		</method>
 	</methods>
@@ -18272,6 +18528,12 @@
 			</return>
 			<description>
 				Return the restricted number of characters to display. Returns -1 if unrestricted.
+			</description>
+		</method>
+		<method name="get_visible_line_count" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
 			</description>
 		</method>
 		<method name="has_autowrap" qualifiers="const">
@@ -21413,66 +21675,78 @@
 </class>
 <class name="Node" inherits="Object" category="Core">
 	<brief_description>
-		Base class for all the "Scene" elements.
+		Base class for all the [i]scene[/i] elements.
 	</brief_description>
 	<description>
-		Nodes can be set as children of other nodes, resulting in a tree arrangement. Any tree of nodes is called a "Scene".
-		Scenes can be saved to disk, and then instanced into other scenes. This allows for very high flexibility in the architecture and data model of the projects.
-		[SceneTree] contains the "active" tree of nodes, and a node becomes active (receiving NOTIFICATION_ENTER_SCENE) when added to that tree.
-		A node can contain any number of nodes as a children (but there is only one tree root) with the requirement that no two children with the same name can exist.
-		Nodes can, optionally, be added to groups. This makes it easy to reach a number of nodes from the code (for example an "enemies" group).
-		Nodes can be set to "process" state, so they constantly receive a callback requesting them to process (do anything). Normal processing ([method _process]) happens as fast as possible and is dependent on the frame rate, so the processing time delta is variable. Fixed processing ([method _fixed_process]) happens a fixed amount of times per second (by default 60) and is useful to link itself to the physics.
-		Nodes can also process input events. When set, the [method _input] function will be called with every input that the program receives. Since this is usually too overkill (unless used for simple projects), an [method _unhandled_input] function is called when the input was not handled by anyone else (usually, GUI [Control] nodes).
-		To keep track of the scene hierarchy (specially when instancing scenes into scenes) an "owner" can be set to a node. This keeps track of who instanced what. This is mostly useful when writing editors and tools, though.
-		Finally, when a node is freed, it will free all its children nodes too.
+		Nodes are the base bricks with which Godot games are developed. They can be set as children of other nodes, resulting in a tree arrangement. A given node can contain any number of nodes as children (but there is only one scene tree root node) with the requirement that all siblings (direct children of a node) should have unique names.
+		Any tree of nodes is called a [i]scene[/i]. Scenes can be saved to the disk and then instanced into other scenes. This allows for very high flexibility in the architecture and data model of the projects. Nodes can optionally be added to groups. This makes it easy to reach a number of nodes from the code (for example an "enemies" group) to perform grouped actions.
+		[b]Scene tree:[/b] The [SceneTree] contains the active tree of nodes. When a node is added to the scene tree, it receives the NOTIFICATION_ENTER_TREE notification and its [method _enter_tree] callback is triggered. Children nodes are always added [i]after[/i] their parent node, i.e. the [method _enter_tree] callback of a parent node will be triggered before its child's.
+		Once all nodes have been added in the scene tree, they receive the NOTIFICATION_READY notification and their respective [method _ready] callbacks are triggered. For groups of nodes, the [method _ready] callback is called in reverse order, from the children up to the parent nodes.
+		It means that when adding a scene to the scene tree, the following order will be used for the callbacks: [method _enter_tree] of the parent, [method _enter_tree] of the children, [method _ready] of the children and finally [method _ready] of the parent (and that recursively for the whole scene).
+		[b]Processing:[/b] Nodes can be set to the "process" state, so that they receive a callback on each frame requesting them to process (do something). Normal processing (callback [method _process], toggled with [method set_process]) happens as fast as possible and is dependent on the frame rate, so the processing time [i]delta[/i] is variable. Fixed processing (callback [method _fixed_process], toggled with [method set_fixed_process]) happens a fixed amount of times per second (by default 60) and is useful to link itself to the physics.
+		Nodes can also process input events. When set, the [method _input] function will be called for each input that the program receives. In many cases, this can be overkill (unless used for simple projects), and the [method _unhandled_input] function might be preferred; it is called when the input event was not handled by anyone else (typically, GUI [Control] nodes), ensuring that the node only receives the events that were meant for it.
+		To keep track of the scene hierarchy (especially when instancing scenes into other scenes), an "owner" can be set for the node with [method set_owner]. This keeps track of who instanced what. This is mostly useful when writing editors and tools, though.
+		Finally, when a node is freed with [method free] or [method queue_free], it will also free all its children.
 	</description>
 	<methods>
 		<method name="_enter_tree" qualifiers="virtual">
 			<description>
+				Called when the node enters the [SceneTree] (e.g. upon instancing, scene changing or after calling [method add_child] in a script). If the node has children, its [method _enter_tree] callback will be called first, and then that of the children.
+				Corresponds to the NOTIFICATION_ENTER_TREE notification in [method Object._notification].
 			</description>
 		</method>
 		<method name="_exit_tree" qualifiers="virtual">
 			<description>
+				Called when the node leaves the [SceneTree] (e.g. upon freeing, scene changing or after calling [method remove_child] in a script). If the node has children, its [method _exit_tree] callback will be called last, after all its children have left the tree.
+				Corresponds to the NOTIFICATION_EXIT_TREE notification in [method Object._notification].
 			</description>
 		</method>
 		<method name="_fixed_process" qualifiers="virtual">
 			<argument index="0" name="delta" type="float">
 			</argument>
 			<description>
-				Called for fixed processing (synced to the physics).
+				Called during the fixed processing step of the main loop. Fixed processing means that the frame rate is synced to the physics, i.e. the [code]delta[/code] variable should be constant.
+				It is only called if fixed processing has been enabled with [method set_fixed_process].
+				Corresponds to the NOTIFICATION_FIXED_PROCESS notification in [method Object._notification].
 			</description>
 		</method>
 		<method name="_input" qualifiers="virtual">
 			<argument index="0" name="event" type="InputEvent">
 			</argument>
 			<description>
-				Called when any input happens (also must enable with [method set_process_input] or the property).
+				Called for every input event.
+				It has to be enabled with [method set_process_input] or the corresponding property in the inspector.
 			</description>
 		</method>
 		<method name="_process" qualifiers="virtual">
 			<argument index="0" name="delta" type="float">
 			</argument>
 			<description>
-				Called for processing. This is called every frame, with the delta time from the previous frame.
+				Called during the processing step of the main loop. Processing happens at every frame and as fast as possible, so the [code]delta[/code] time since the previous frame is not constant.
+				It is only called if processing has been enabled with [method set_process].
+				Corresponds to the NOTIFICATION_PROCESS notification in [method Object._notification].
 			</description>
 		</method>
 		<method name="_ready" qualifiers="virtual">
 			<description>
-				Called when ready (entered scene and children entered too).
+				Called when the node is "ready", i.e. when both the node and its children have entered the scene tree. If the node has children, their [method _ready] callback gets triggered first, and the node will receive the ready notification only afterwards.
+				Corresponds to the NOTIFICATION_READY notification in [method Object._notification].
 			</description>
 		</method>
 		<method name="_unhandled_input" qualifiers="virtual">
 			<argument index="0" name="event" type="InputEvent">
 			</argument>
 			<description>
-				Called when any input happens that was not handled by something else (also must enable with [method set_process_unhandled_input] or the property).
+				Called for every input event that has not already been handled by another node.
+				It has to be enabled with [method set_process_unhandled_input] or the corresponding property in the inspector.
 			</description>
 		</method>
 		<method name="_unhandled_key_input" qualifiers="virtual">
 			<argument index="0" name="key_event" type="InputEvent">
 			</argument>
 			<description>
-				Called when any key input happens that was not handled by something else.
+				Called for every [i]key[/i] input event that has not already been handled by another node.
+				It has to be enabled with [method set_process_unhandled_key_input] or the corresponding property in the inspector.
 			</description>
 		</method>
 		<method name="add_child">
@@ -21482,7 +21756,7 @@
 			</argument>
 			<description>
 				Add a child [Node]. Nodes can have as many children as they want, but every child must have a unique name. Children nodes are automatically deleted when the parent node is deleted, so deleting a whole scene is performed by deleting its topmost node.
-				The optional boolean argument enforces creating child node with human-readable names, based on the name of node being instanced instead of its type only.
+				The optional boolean argument enforces creating child nodes with human-readable names, based on the name of the node being instanced instead of its type only.
 			</description>
 		</method>
 		<method name="add_to_group">
@@ -21491,14 +21765,14 @@
 			<argument index="1" name="persistent" type="bool" default="false">
 			</argument>
 			<description>
-				Add a node to a group. Groups are helpers to name and organize group of nodes, like for example: "Enemies", "Collectables", etc. A [Node] can be in any number of groups. Nodes can be assigned a group at any time, but will not be added to it until they are inside the scene tree (see [method is_inside_tree]).
+				Add a node to a group. Groups are helpers to name and organize a subset of nodes, like for example "enemies" or "collectables". A [Node] can be in any number of groups. Nodes can be assigned a group at any time, but will not be added to it until they are inside the scene tree (see [method is_inside_tree]).
 			</description>
 		</method>
 		<method name="can_process" qualifiers="const">
 			<return type="bool">
 			</return>
 			<description>
-				Return true if the node can process.
+				Return true if the node can process, i.e. whether its pause mode allows processing while the scene tree is paused (see [method set_pause_mode]). Always returns true if the scene tree is not paused, and false if the node is not in the tree. FIXME: Why FAIL_COND?
 			</description>
 		</method>
 		<method name="duplicate" qualifiers="const">
@@ -21507,6 +21781,7 @@
 			<argument index="0" name="use_instancing" type="bool" default="false">
 			</argument>
 			<description>
+				Duplicate the node, returning a new [Node]. If [code]use_instancing[/code] is true, the duplicated node will be a new instance of the original [PackedScene], if not it will be an independent node. The duplicated node has the same group assignments and signals as the original one.
 			</description>
 		</method>
 		<method name="find_node" qualifiers="const">
@@ -21528,54 +21803,56 @@
 			<argument index="0" name="idx" type="int">
 			</argument>
 			<description>
-				Return a children node by it's index (see [method get_child_count]). This method is often used for iterating all children of a node.
+				Return a child node by its index (see [method get_child_count]). This method is often used for iterating all children of a node.
 			</description>
 		</method>
 		<method name="get_child_count" qualifiers="const">
 			<return type="int">
 			</return>
 			<description>
-				Return the amount of children nodes.
+				Return the amount of child nodes.
 			</description>
 		</method>
 		<method name="get_children" qualifiers="const">
 			<return type="Array">
 			</return>
 			<description>
+				Return an array of references ([Node]) to the child nodes.
 			</description>
 		</method>
 		<method name="get_filename" qualifiers="const">
 			<return type="String">
 			</return>
 			<description>
-				Return a filename that may be containedA node can contained by the node. When a scene is instanced from a file, it topmost node contains the filename from where it was loaded (see [method set_filename]).
+				Return a filename that may be contained by the node. When a scene is instanced from a file, it topmost node contains the filename from where it was loaded (see [method set_filename]).
 			</description>
 		</method>
 		<method name="get_fixed_process_delta_time" qualifiers="const">
 			<return type="float">
 			</return>
 			<description>
-				Return the time elapsed since the last fixed frame. This is always the same in fixed processing unless the frames per second is changed in [OS].
+				Return the time elapsed since the last fixed frame (see [method _fixed_process]). This is always the same in fixed processing unless the frames per second is changed in [OS].
 			</description>
 		</method>
 		<method name="get_groups" qualifiers="const">
 			<return type="Array">
 			</return>
 			<description>
+				Return an array listing the groups that the node is part of.
 			</description>
 		</method>
 		<method name="get_index" qualifiers="const">
 			<return type="int">
 			</return>
 			<description>
-				Get the node index in the parent (assuming it has a parent).
+				Get the node index, i.e. its position among the siblings of its parent.
 			</description>
 		</method>
 		<method name="get_name" qualifiers="const">
 			<return type="String">
 			</return>
 			<description>
-				Return the name of the [Node]. Name is be unique within parent.
+				Return the name of the node. This name is unique among the siblings (other child nodes from the same parent).
 			</description>
 		</method>
 		<method name="get_node" qualifiers="const">
@@ -21584,17 +21861,18 @@
 			<argument index="0" name="path" type="NodePath">
 			</argument>
 			<description>
-				Fetch a node. NodePath must be valid (or else error will occur) and can be either the path to child node, a relative path (from the current node to another node), or an absolute path to a node.
-				Note: fetching absolute paths only works when the node is inside the scene tree (see [method is_inside_tree]). Examples. Assume your current node is Character and following tree:
+				Fetch a node. The [NodePath] must be valid (or else an error will be raised) and can be either the path to child node, a relative path (from the current node to another node), or an absolute path to a node.
+				Note: fetching absolute paths only works when the node is inside the scene tree (see [method is_inside_tree]).
+				[i]Example:[/i] Assume your current node is Character and the following tree:
 				[codeblock]
-				root/
-				root/Character
-				root/Character/Sword
-				root/Character/Backpack/Dagger
-				root/MyGame
-				root/Swamp/Alligator
-				root/Swamp/Mosquito
-				root/Swamp/Goblin
+				/root
+				/root/Character
+				/root/Character/Sword
+				/root/Character/Backpack/Dagger
+				/root/MyGame
+				/root/Swamp/Alligator
+				/root/Swamp/Mosquito
+				/root/Swamp/Goblin
 				[/codeblock]
 				Possible paths are:
 				[codeblock]
@@ -21624,7 +21902,7 @@
 			<return type="Node">
 			</return>
 			<description>
-				Return the parent [Node] of the current [Node], or an empty Object if the node lacks a parent.
+				Return the parent node of the current node, or an empty [Node] if the node lacks a parent.
 			</description>
 		</method>
 		<method name="get_path" qualifiers="const">
@@ -21703,12 +21981,6 @@
 			</argument>
 			<description>
 				Return [i]true[/i] if the "node" argument is a direct or indirect child of the current node, otherwise return [i]false[/i].
-			</description>
-		</method>
-		<method name="is_displayed_folded" qualifiers="const">
-			<return type="bool">
-			</return>
-			<description>
 			</description>
 		</method>
 		<method name="is_displayed_folded" qualifiers="const">
@@ -21834,12 +22106,6 @@
 			</argument>
 			<description>
 				Replace a node in a scene by a given one. Subscriptions that pass through this node will be lost.
-			</description>
-		</method>
-		<method name="set_display_folded">
-			<argument index="0" name="fold" type="bool">
-			</argument>
-			<description>
 			</description>
 		</method>
 		<method name="set_display_folded">
@@ -22260,6 +22526,7 @@
 			<argument index="1" name="title" type="String" default="&quot;Alert!&quot;">
 			</argument>
 			<description>
+				Displays a modal dialog box utilizing the host OS.
 			</description>
 		</method>
 		<method name="can_draw" qualifiers="const">
@@ -22273,6 +22540,7 @@
 			<return type="bool">
 			</return>
 			<description>
+				Returns if the current host platform is using multiple threads.
 			</description>
 		</method>
 		<method name="delay_msec" qualifiers="const">
@@ -22293,12 +22561,17 @@
 			<argument index="0" name="file" type="String">
 			</argument>
 			<description>
+				Dumps the memory allocation ringlist to a file (only works in debug).
+				Entry format per line: "Address - Size - Description"
 			</description>
 		</method>
 		<method name="dump_resources_to_file">
 			<argument index="0" name="file" type="String">
 			</argument>
 			<description>
+				Dumps all used resources to file (only works in debug).
+				Entry format per line: "Resource Type : Resource Location"
+				At the end of the file is a statistic of all used Resource Types.
 			</description>
 		</method>
 		<method name="execute">
@@ -22322,12 +22595,14 @@
 			<argument index="0" name="string" type="String">
 			</argument>
 			<description>
+				Returns the scancode of the given string (e.g. "Escape")
 			</description>
 		</method>
 		<method name="get_borderless_window" qualifiers="const">
 			<return type="bool">
 			</return>
 			<description>
+				Returns true if the current window is borderless.
 			</description>
 		</method>
 		<method name="get_clipboard" qualifiers="const">
@@ -22355,6 +22630,7 @@
 			<return type="String">
 			</return>
 			<description>
+				Returns the value of the commandline argument "-level".
 			</description>
 		</method>
 		<method name="get_data_dir" qualifiers="const">
@@ -22397,6 +22673,20 @@
 			</return>
 			<description>
 				Return the total amount of dynamic memory used (only works in debug).
+			</description>
+		</method>
+		<method name="get_engine_version" qualifiers="const">
+			<return type="Dictionary">
+			</return>
+			<description>
+				Returns the current engine version information in a Dictionary.
+
+				"major"    - Holds the major version number as a String
+				"minor"    - Holds the minor version number as a String
+				"patch"    - Holds the patch version number as a String
+				"status"   - Holds the status (e.g. "beta", "rc1", "rc2", ... "stable") as a String
+				"revision" - Holds the revision (e.g. "custom-build") as a String
+				"string"   - major + minor + patch + status + revision in a single String
 			</description>
 		</method>
 		<method name="get_environment" qualifiers="const">
@@ -22445,6 +22735,14 @@
 				Return the amount of fixed iterations per second (for fixed process and physics).
 			</description>
 		</method>
+		<method name="get_latin_keyboard_variant" qualifiers="const">
+			<return type="String">
+			</return>
+			<description>
+				Returns the current latin keyboard variant as a String.
+				Possible return values are: "QWERTY", "AZERTY", "QZERTY", "DVORAK", "NEO" or "ERROR"
+			</description>
+		</method>
 		<method name="get_locale" qualifiers="const">
 			<return type="String">
 			</return>
@@ -22463,6 +22761,7 @@
 			<return type="String">
 			</return>
 			<description>
+				Returns the model name of the current device.
 			</description>
 		</method>
 		<method name="get_name" qualifiers="const">
@@ -22492,6 +22791,7 @@
 			<argument index="0" name="code" type="int">
 			</argument>
 			<description>
+				Returns the given scancode as a string (e.g. Return values: "Escape", "Shift+Escape").
 			</description>
 		</method>
 		<method name="get_screen_count" qualifiers="const">
@@ -22507,6 +22807,15 @@
 			<argument index="0" name="screen" type="int" default="0">
 			</argument>
 			<description>
+				Returns the dots per inch density of the specified screen.
+
+				On Android Devices, the actual screen densities are grouped into six generalized densities:
+					ldpi    - 120 dpi
+					mdpi    - 160 dpi
+					hdpi    - 240 dpi
+					xhdpi   - 320 dpi
+					xxhdpi  - 480 dpi
+					xxxhdpi - 640 dpi
 			</description>
 		</method>
 		<method name="get_screen_orientation" qualifiers="const">
@@ -22660,6 +22969,18 @@
 			<return type="bool">
 			</return>
 			<description>
+			</description>
+		</method>
+		<method name="has_virtual_keyboard" qualifiers="const">
+			<return type="bool">
+			</return>
+			<description>
+				Returns true if the platform has a virtual keyboard, false otherwise.
+			</description>
+		</method>
+		<method name="hide_virtual_keyboard">
+			<description>
+				Hides the virtual keyboard if it is shown, does nothing otherwise.
 			</description>
 		</method>
 		<method name="is_debug_build" qualifiers="const">
@@ -22818,6 +23139,11 @@
 			<description>
 			</description>
 		</method>
+		<method name="request_attention">
+			<description>
+				Request the user attention to the window. It'll flash the taskbar button on Windows or bounce the dock icon on OSX.
+			</description>
+		</method>
 		<method name="set_borderless_window">
 			<argument index="0" name="borderless" type="bool">
 			</argument>
@@ -22974,6 +23300,13 @@
 			<description>
 			</description>
 		</method>
+		<method name="show_virtual_keyboard">
+			<argument index="0" name="existing_text" type="String" default="&quot;&quot;">
+			</argument>
+			<description>
+				Shows the virtual keyboard if the platform has one. The [i]existing_text[/i] parameter is useful for implementing your own LineEdit, as it tells the virtual keyboard what text has already been typed (the virtual keyboard uses it for auto-correct and predictions).
+			</description>
+		</method>
 	</methods>
 	<constants>
 		<constant name="DAY_SUNDAY" value="0">
@@ -23111,6 +23444,8 @@
 			</description>
 		</method>
 		<method name="call">
+			<return type="Variant">
+			</return>
 			<argument index="0" name="method" type="String">
 			</argument>
 			<argument index="1" name="arg0" type="Variant" default="NULL">
@@ -25797,7 +26132,7 @@
 			</argument>
 			<argument index="1" name="shape" type="RID">
 			</argument>
-			<argument index="2" name="transform" type="Matrix32" default="1,0, 0,1, 0,0">
+			<argument index="2" name="transform" type="Matrix32" default="((1, 0), (0, 1), (0, 0))">
 			</argument>
 			<description>
 				Add a shape to the area, along with a transform matrix. Shapes are usually referenced by their index, so you should track which shape has a given index.
@@ -26030,7 +26365,7 @@
 			</argument>
 			<argument index="1" name="shape" type="RID">
 			</argument>
-			<argument index="2" name="transform" type="Matrix32" default="1,0, 0,1, 0,0">
+			<argument index="2" name="transform" type="Matrix32" default="((1, 0), (0, 1), (0, 0))">
 			</argument>
 			<description>
 				Add a shape to the body, along with a transform matrix. Shapes are usually referenced by their index, so you should track which shape has a given index.
@@ -29332,14 +29667,14 @@
 			</description>
 		</method>
 		<method name="popup_centered">
-			<argument index="0" name="size" type="Vector2" default="Vector2(0,0)">
+			<argument index="0" name="size" type="Vector2" default="Vector2((0, 0))">
 			</argument>
 			<description>
 				Popup (show the control in modal form) in the center of the screen, at the current size, or at a size determined by "size".
 			</description>
 		</method>
 		<method name="popup_centered_minsize">
-			<argument index="0" name="minsize" type="Vector2" default="Vector2(0,0)">
+			<argument index="0" name="minsize" type="Vector2" default="Vector2((0, 0))">
 			</argument>
 			<description>
 				Popup (show the control in modal form) in the center of the screen, ensuring the size is never smaller than [code]minsize[/code].
@@ -30172,8 +30507,10 @@
 </class>
 <class name="RID" category="Built-In Types">
 	<brief_description>
+		Handle for a [Resource]'s unique ID.
 	</brief_description>
 	<description>
+		The RID type is used to access the unique integer ID of a resource.  They are opaque, so they do not grant access to the associated resource by themselves. They are used by and with the low-level Server classes such as [VisualServer].
 	</description>
 	<methods>
 		<method name="RID">
@@ -30182,12 +30519,14 @@
 			<argument index="0" name="from" type="Object">
 			</argument>
 			<description>
+				Create a new RID instance with the ID of a given resource. When not handed a valid resource, silently stores the unused ID 0.
 			</description>
 		</method>
 		<method name="get_id">
 			<return type="int">
 			</return>
 			<description>
+				Retrieve the ID of the referenced resource.
 			</description>
 		</method>
 	</methods>
@@ -30499,6 +30838,7 @@
 			<return type="Vector3">
 			</return>
 			<description>
+				Returns collision point. This point is in [b]global[/b] coordinate system.
 			</description>
 		</method>
 		<method name="get_layer_mask" qualifiers="const">
@@ -30541,6 +30881,7 @@
 			<argument index="0" name="local_point" type="Vector3">
 			</argument>
 			<description>
+				Sets to which point ray should be casted. This point is in [b]local[/b] coordinate system.
 			</description>
 		</method>
 		<method name="set_enabled">
@@ -31035,24 +31376,29 @@
 		Simple regular expression matcher.
 	</brief_description>
 	<description>
-		Class for finding text patterns in a string using regular expressions. Regular expressions are a way to define patterns of text to be searched.
-		This class only finds patterns in a string. It can not perform replacements.
-		Usage of regular expressions is too long to be explained here, but Internet is full of tutorials and detailed explanations.
+		Class for finding text patterns in a string using regular expressions. It can not perform replacements. Regular expressions are a way to define patterns of text to be searched. Details on writing patterns are too long to explain here but the Internet is full of tutorials and detailed explanations.
+		Once created, the RegEx object needs to be compiled with the pattern before it can be used. The pattern must be escaped first for gdscript before it is escaped for the expression. For example:
+		[code]var exp = RegEx.new()[/code]
+		[code]exp.compile("\\d+")[/code]
+		would be read by RegEx as [code]\d+[/code]
+		Similarly:
+		[code]exp.compile("\"(?:\\\\.|[^\"])*\"")[/code]
+		would be read as [code]"(?:\\.|[^"])*"[/code]
 		Currently supported features:
-		Capturing [code]()[/code] and non-capturing [code](?:)[/code] groups
-		Any character [code].[/code]
-		Shorthand character classes [code]\w \W \s \S \d \D[/code]
-		User-defined character classes such as [code][A-Za-z][/code]
-		Simple quantifiers [code]?[/code], [code]*[/code] and [code]+[/code]
-		Range quantifiers [code]{x,y}[/code]
-		Lazy (non-greedy) quantifiers [code]*?[/code]
-		Beginning [code]^[/code] and end [code]$[/code] anchors
-		Alternation [code]|[/code]
-		Backreferences [code]\1[/code] and [code]\g{1}[/code]
-		POSIX character classes [code][[:alnum:]][/code]
-		Lookahead [code](?=)[/code], [code](?!)[/code] and lookbehind [code](?&lt;=)[/code], [code](?&lt;!)[/code]
-		ASCII [code]\xFF[/code] and Unicode [code]\uFFFF[/code] code points (in a style similar to Python)
-		Word boundaries [code]\b[/code], [code]\B[/code]
+		* Capturing [code]()[/code] and non-capturing [code](?:)[/code] groups
+		* Any character [code].[/code]
+		* Shorthand character classes [code]\w \W \s \S \d \D[/code]
+		* User-defined character classes such as [code][A-Za-z][/code]
+		* Simple quantifiers [code]?[/code], [code]*[/code] and [code]+[/code]
+		* Range quantifiers [code]{x,y}[/code]
+		* Lazy (non-greedy) quantifiers [code]*?[/code]
+		* Beginning [code]^[/code] and end [code]$[/code] anchors
+		* Alternation [code]|[/code]
+		* Backreferences [code]\1[/code] and [code]\g{1}[/code]
+		* POSIX character classes [code][[:alnum:]][/code]
+		* Lookahead [code](?=)[/code], [code](?!)[/code] and lookbehind [code](?&lt;=)[/code], [code](?&lt;!)[/code]
+		* ASCII [code]\xFF[/code] and Unicode [code]\uFFFF[/code] code points (in a style similar to Python)
+		* Word boundaries [code]\b[/code], [code]\B[/code]
 	</description>
 	<methods>
 		<method name="clear">
@@ -31601,7 +31947,7 @@
 			<return type="String">
 			</return>
 			<description>
-			Returns the raw text, stripping out the formatting information.
+				Returns the raw text, stripping out the formatting information.
 			</description>
 		</method>
 		<method name="get_total_character_count" qualifiers="const">
@@ -32847,6 +33193,12 @@
 				Return the sample from the library matching the given text ID. Return null if the sample is not found.
 			</description>
 		</method>
+		<method name="get_sample_list" qualifiers="const">
+			<return type="Array">
+			</return>
+			<description>
+			</description>
+		</method>
 		<method name="has_sample" qualifiers="const">
 			<return type="bool">
 			</return>
@@ -33715,6 +34067,14 @@
 			<description>
 			</description>
 		</method>
+		<method name="create_timer">
+			<return type="SceneTreeTimer">
+			</return>
+			<argument index="0" name="time_sec" type="float">
+			</argument>
+			<description>
+			</description>
+		</method>
 		<method name="get_current_scene" qualifiers="const">
 			<return type="Node">
 			</return>
@@ -33943,6 +34303,34 @@
 		</constant>
 	</constants>
 </class>
+<class name="SceneTreeTimer" inherits="Reference" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_time_left" qualifiers="const">
+			<return type="float">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_time_left">
+			<argument index="0" name="time" type="float">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<signals>
+		<signal name="timeout">
+			<description>
+			</description>
+		</signal>
+	</signals>
+	<constants>
+	</constants>
+</class>
 <class name="Script" inherits="Resource" category="Core">
 	<brief_description>
 		Base class for scripts.
@@ -34050,28 +34438,28 @@
 			<return type="bool">
 			</return>
 			<description>
-				Return true if horizontal scrool is allowed.
+				Return true if horizontal scroll is allowed.
 			</description>
 		</method>
 		<method name="is_v_scroll_enabled" qualifiers="const">
 			<return type="bool">
 			</return>
 			<description>
-				Return true if vertical scrool is allowed.
+				Return true if vertical scroll is allowed.
 			</description>
 		</method>
 		<method name="set_enable_h_scroll">
 			<argument index="0" name="enable" type="bool">
 			</argument>
 			<description>
-				Set allows horizontal scrool.
+				Set allows horizontal scroll.
 			</description>
 		</method>
 		<method name="set_enable_v_scroll">
 			<argument index="0" name="enable" type="bool">
 			</argument>
 			<description>
-				Set allows vertical scrool.
+				Set allows vertical scroll.
 			</description>
 		</method>
 		<method name="set_h_scroll">
@@ -38570,6 +38958,12 @@
 			<description>
 			</description>
 		</method>
+		<method name="get_modulate" qualifiers="const">
+			<return type="Color">
+			</return>
+			<description>
+			</description>
+		</method>
 		<method name="get_region_rect" qualifiers="const">
 			<return type="Rect2">
 			</return>
@@ -38600,6 +38994,12 @@
 			<argument index="0" name="margin" type="int">
 			</argument>
 			<argument index="1" name="size" type="float">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_modulate">
+			<argument index="0" name="color" type="Color">
 			</argument>
 			<description>
 			</description>
@@ -38642,6 +39042,12 @@
 		</method>
 		<method name="add_color">
 			<argument index="0" name="color" type="Color">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="add_index">
+			<argument index="0" name="index" type="int">
 			</argument>
 			<description>
 			</description>
@@ -39205,6 +39611,13 @@
 				Return the line the editing cursor is at.
 			</description>
 		</method>
+		<method name="cursor_is_block_mode" qualifiers="const">
+			<return type="bool">
+			</return>
+			<description>
+				Gets whether the text editor caret is in block mode.
+			</description>
+		</method>
 		<method name="cursor_set_blink_enabled">
 			<argument index="0" name="enable" type="bool">
 			</argument>
@@ -39217,6 +39630,13 @@
 			</argument>
 			<description>
 				Set the text editor caret blink speed. Cannot be less then or equal to 0.
+			</description>
+		</method>
+		<method name="cursor_set_block_mode">
+			<argument index="0" name="enable" type="bool">
+			</argument>
+			<description>
+				Set the text editor caret to block mode.
 			</description>
 		</method>
 		<method name="cursor_set_column">
@@ -39317,11 +39737,25 @@
 				Insert a given text at the cursor position.
 			</description>
 		</method>
+		<method name="is_highlight_all_occurrences_enabled" qualifiers="const">
+			<return type="bool">
+			</return>
+			<description>
+				Returns true if highlight all occurrences is enabled.
+			</description>
+		</method>
 		<method name="is_selection_active" qualifiers="const">
 			<return type="bool">
 			</return>
 			<description>
 				Return true if the selection is active.
+			</description>
+		</method>
+		<method name="is_show_line_numbers_enabled" qualifiers="const">
+			<return type="bool">
+			</return>
+			<description>
+				Returns true if line numbers are enabled.
 			</description>
 		</method>
 		<method name="is_syntax_coloring_enabled" qualifiers="const">
@@ -39387,6 +39821,13 @@
 				Set a custom background color. A background color with alpha==0 disables this.
 			</description>
 		</method>
+		<method name="set_highlight_all_occurrences">
+			<argument index="0" name="enable" type="bool">
+			</argument>
+			<description>
+				Set to enable highlighting all occurrences of the current selection.
+			</description>
+		</method>
 		<method name="set_max_chars">
 			<argument index="0" name="amount" type="int">
 			</argument>
@@ -39401,13 +39842,6 @@
 				Set the text editor as read-only. Text can be displayed but not edited.
 			</description>
 		</method>
-		<method name="set_symbol_color">
-			<argument index="0" name="color" type="Color">
-			</argument>
-			<description>
-				Set the color for symbols.
-			</description>
-		</method>
 		<method name="set_show_line_numbers">
 			<argument index="0" name="enable" type="bool">
 			</argument>
@@ -39415,25 +39849,11 @@
 				Set to enable showing line numbers.
 			</description>
 		</method>
-		<method name="is_show_line_numbers_enabled" qualifiers="const">
-			<return type="bool">
-			</return>
-			<description>
-				Returns true if line numbers are enabled.
-			</description>
-		</method>
-		<method name="set_highlight_all_occurrences">
-			<argument index="0" name="enable" type="bool">
+		<method name="set_symbol_color">
+			<argument index="0" name="color" type="Color">
 			</argument>
 			<description>
-				Set to enable highlighting all occurrences of the current selection.
-			</description>
-		</method>
-		<method name="is_highlight_all_occurrences_enabled" qualifiers="const">
-			<return type="bool">
-			</return>
-			<description>
-				Returns true if highlight all occurrences is enabled.
+				Set the color for symbols.
 			</description>
 		</method>
 		<method name="set_syntax_coloring">
@@ -39464,6 +39884,13 @@
 		</method>
 	</methods>
 	<signals>
+		<signal name="breakpoint_toggled">
+			<argument index="0" name="row" type="int">
+			</argument>
+			<description>
+				Emitted when a breakpoint is placed via the breakpoint gutter.
+			</description>
+		</signal>
 		<signal name="cursor_changed">
 			<description>
 				Emitted when the cursor changes.
@@ -39508,6 +39935,8 @@
 		<theme_item name="brace_mismatch_color" type="Color">
 		</theme_item>
 		<theme_item name="breakpoint_color" type="Color">
+		</theme_item>
+		<theme_item name="caret_background_color" type="Color">
 		</theme_item>
 		<theme_item name="caret_color" type="Color">
 		</theme_item>
@@ -40696,6 +41125,8 @@
 		</constant>
 		<constant name="TILE_ORIGIN_CENTER" value="1">
 			Tile origin at its center.
+		</constant>
+		<constant name="TILE_ORIGIN_BOTTOM_LEFT" value="2">
 		</constant>
 	</constants>
 </class>
@@ -42095,6 +42526,16 @@
 			<description>
 			</description>
 		</method>
+		<method name="set_button">
+			<argument index="0" name="column" type="int">
+			</argument>
+			<argument index="1" name="button_idx" type="int">
+			</argument>
+			<argument index="2" name="button" type="Texture">
+			</argument>
+			<description>
+			</description>
+		</method>
 		<method name="set_cell_mode">
 			<argument index="0" name="column" type="int">
 			</argument>
@@ -42256,7 +42697,7 @@
 		Because it is easy to get it wrong, here is a quick usage example:
 		[codeblock]
 		var tween = get_node("Tween")
-		tween.interpolate_property(get_node("Node2D_to_move"), "transform/pos", Vector2(0,0), Vector2(100,100), Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+		tween.interpolate_property(get_node("Node2D_to_move"), "transform/pos", Vector2(0,0), Vector2(100,100), 1, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 		tween.start()
 		[/codeblock]
 		Some of the methods of this class require a property name. You can get the property name by hovering over the property in the inspector of the editor.
@@ -44283,9 +44724,9 @@
 		<method name="set_size_override">
 			<argument index="0" name="enable" type="bool">
 			</argument>
-			<argument index="1" name="size" type="Vector2" default="Vector2(-1,-1)">
+			<argument index="1" name="size" type="Vector2" default="Vector2((-1, -1))">
 			</argument>
-			<argument index="2" name="margin" type="Vector2" default="Vector2(0,0)">
+			<argument index="2" name="margin" type="Vector2" default="Vector2((0, 0))">
 			</argument>
 			<description>
 				Set the size of the viewport. If the enable parameter is true, it would use the override, otherwise it would use the default size. If the size parameter is equal to [code](-1, -1)[/code], it won't update the size.
@@ -44661,6 +45102,1488 @@
 	<constants>
 	</constants>
 </class>
+<class name="VisualScript" inherits="Script" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="add_custom_signal">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="add_function">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="add_node">
+			<argument index="0" name="func" type="String">
+			</argument>
+			<argument index="1" name="id" type="int">
+			</argument>
+			<argument index="2" name="node" type="Object">
+			</argument>
+			<argument index="3" name="pos" type="Vector2" default="Vector2((0, 0))">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="add_variable">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="default_value" type="Variant" default="NULL">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="custom_signal_add_argument">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="type" type="int">
+			</argument>
+			<argument index="2" name="argname" type="String">
+			</argument>
+			<argument index="3" name="index" type="int" default="-1">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="custom_signal_get_argument_count" qualifiers="const">
+			<return type="int">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="custom_signal_get_argument_name" qualifiers="const">
+			<return type="String">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="argidx" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="custom_signal_get_argument_type" qualifiers="const">
+			<return type="int">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="argidx" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="custom_signal_remove_argument">
+			<argument index="0" name="argidx" type="String">
+			</argument>
+			<argument index="1" name="arg1" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="custom_signal_set_argument_name">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="argidx" type="int">
+			</argument>
+			<argument index="2" name="argname" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="custom_signal_set_argument_type">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="argidx" type="int">
+			</argument>
+			<argument index="2" name="type" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="custom_signal_swap_argument">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="argidx" type="int">
+			</argument>
+			<argument index="2" name="withidx" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="data_connect">
+			<argument index="0" name="func" type="String">
+			</argument>
+			<argument index="1" name="from_node" type="int">
+			</argument>
+			<argument index="2" name="from_port" type="int">
+			</argument>
+			<argument index="3" name="to_node" type="int">
+			</argument>
+			<argument index="4" name="to_port" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="data_disconnect">
+			<argument index="0" name="func" type="String">
+			</argument>
+			<argument index="1" name="from_node" type="int">
+			</argument>
+			<argument index="2" name="from_port" type="int">
+			</argument>
+			<argument index="3" name="to_node" type="int">
+			</argument>
+			<argument index="4" name="to_port" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="get_function_node_id" qualifiers="const">
+			<return type="int">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="get_function_scroll" qualifiers="const">
+			<return type="Vector2">
+			</return>
+			<argument index="0" name="arg0" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="get_node" qualifiers="const">
+			<return type="Object">
+			</return>
+			<argument index="0" name="func" type="String">
+			</argument>
+			<argument index="1" name="id" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="get_node_pos" qualifiers="const">
+			<return type="Vector2">
+			</return>
+			<argument index="0" name="func" type="String">
+			</argument>
+			<argument index="1" name="id" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="get_variable_default_value" qualifiers="const">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="get_variable_info" qualifiers="const">
+			<return type="Dictionary">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_custom_signal" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_data_connection" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="func" type="String">
+			</argument>
+			<argument index="1" name="from_node" type="int">
+			</argument>
+			<argument index="2" name="from_port" type="int">
+			</argument>
+			<argument index="3" name="to_node" type="int">
+			</argument>
+			<argument index="4" name="to_port" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_function" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_node" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="func" type="String">
+			</argument>
+			<argument index="1" name="id" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_sequence_connection" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="func" type="String">
+			</argument>
+			<argument index="1" name="from_node" type="int">
+			</argument>
+			<argument index="2" name="from_output" type="int">
+			</argument>
+			<argument index="3" name="to_node" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="has_variable" qualifiers="const">
+			<return type="bool">
+			</return>
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="remove_custom_signal">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="remove_function">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="remove_node">
+			<argument index="0" name="func" type="String">
+			</argument>
+			<argument index="1" name="id" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="remove_variable">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="rename_custom_signal">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="new_name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="rename_function">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="new_name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="rename_variable">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="new_name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="sequence_connect">
+			<argument index="0" name="func" type="String">
+			</argument>
+			<argument index="1" name="from_node" type="int">
+			</argument>
+			<argument index="2" name="from_output" type="int">
+			</argument>
+			<argument index="3" name="to_node" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="sequence_disconnect">
+			<argument index="0" name="func" type="String">
+			</argument>
+			<argument index="1" name="from_node" type="int">
+			</argument>
+			<argument index="2" name="from_output" type="int">
+			</argument>
+			<argument index="3" name="to_node" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_function_scroll">
+			<argument index="0" name="ofs" type="String">
+			</argument>
+			<argument index="1" name="arg1" type="Vector2">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_instance_base_type">
+			<argument index="0" name="type" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_node_pos">
+			<argument index="0" name="func" type="String">
+			</argument>
+			<argument index="1" name="id" type="int">
+			</argument>
+			<argument index="2" name="pos" type="Vector2">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_variable_default_value">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="value" type="Variant">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_variable_info">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<argument index="1" name="value" type="Dictionary">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<signals>
+		<signal name="node_ports_changed">
+			<argument index="0" name="function" type="String">
+			</argument>
+			<argument index="1" name="id" type="int">
+			</argument>
+			<description>
+			</description>
+		</signal>
+	</signals>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptBuiltinFunc" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_func">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_func">
+			<argument index="0" name="which" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptCondition" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptConstant" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_constant_type" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_constant_value" qualifiers="const">
+			<description>
+			</description>
+		</method>
+		<method name="set_constant_type">
+			<argument index="0" name="type" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_constant_value">
+			<argument index="0" name="value" type="Variant">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptCustomNode" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="_get_caption" qualifiers="virtual">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="_get_category" qualifiers="virtual">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="_get_input_value_port_count" qualifiers="virtual">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="_get_input_value_port_name" qualifiers="virtual">
+			<return type="String">
+			</return>
+			<argument index="0" name="idx" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="_get_input_value_port_type" qualifiers="virtual">
+			<return type="int">
+			</return>
+			<argument index="0" name="idx" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="_get_output_port_unsequenced" qualifiers="virtual">
+			<return type="int">
+			</return>
+			<argument index="0" name="idx" type="int">
+			</argument>
+			<argument index="1" name="work_mem" type="Array">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="_get_output_sequence_port_count" qualifiers="virtual">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="_get_output_sequence_port_text" qualifiers="virtual">
+			<return type="String">
+			</return>
+			<argument index="0" name="idx" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="_get_output_value_port_count" qualifiers="virtual">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="_get_output_value_port_name" qualifiers="virtual">
+			<return type="String">
+			</return>
+			<argument index="0" name="idx" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="_get_output_value_port_type" qualifiers="virtual">
+			<return type="int">
+			</return>
+			<argument index="0" name="idx" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="_get_text" qualifiers="virtual">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="_get_working_memory_size" qualifiers="virtual">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="_has_input_sequence_port" qualifiers="virtual">
+			<return type="bool">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="_is_output_port_unsequenced" qualifiers="virtual">
+			<return type="int">
+			</return>
+			<argument index="0" name="idx" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="_step" qualifiers="virtual">
+			<return type="Variant">
+			</return>
+			<argument index="0" name="inputs" type="Array">
+			</argument>
+			<argument index="1" name="outputs" type="Array">
+			</argument>
+			<argument index="2" name="start_mode" type="int">
+			</argument>
+			<argument index="3" name="working_mem" type="Array">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+		<constant name="START_MODE_BEGIN_SEQUENCE" value="0">
+		</constant>
+		<constant name="START_MODE_CONTINUE_SEQUENCE" value="1">
+		</constant>
+		<constant name="START_MODE_RESUME_YIELD" value="2">
+		</constant>
+		<constant name="STEP_PUSH_STACK_BIT" value="16777216">
+		</constant>
+		<constant name="STEP_GO_BACK_BIT" value="33554432">
+		</constant>
+		<constant name="STEP_NO_ADVANCE_BIT" value="67108864">
+		</constant>
+		<constant name="STEP_EXIT_FUNCTION_BIT" value="134217728">
+		</constant>
+		<constant name="STEP_YIELD_BIT" value="268435456">
+		</constant>
+	</constants>
+</class>
+<class name="VisualScriptEmitSignal" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_signal" qualifiers="const">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_signal">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptEngineSingleton" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_singleton">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_singleton">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptFunction" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptFunctionCall" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_base_path" qualifiers="const">
+			<return type="NodePath">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_base_type" qualifiers="const">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_basic_type" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_call_mode" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_function" qualifiers="const">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_use_default_args" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_base_path">
+			<argument index="0" name="base_path" type="NodePath">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_base_type">
+			<argument index="0" name="base_type" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_basic_type">
+			<argument index="0" name="basic_type" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_call_mode">
+			<argument index="0" name="mode" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_function">
+			<argument index="0" name="function" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_use_default_args">
+			<argument index="0" name="amount" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+		<constant name="CALL_MODE_SELF" value="0">
+		</constant>
+		<constant name="CALL_MODE_NODE_PATH" value="1">
+		</constant>
+		<constant name="CALL_MODE_INSTANCE" value="2">
+		</constant>
+		<constant name="CALL_MODE_BASIC_TYPE" value="3">
+		</constant>
+	</constants>
+</class>
+<class name="VisualScriptFunctionState" inherits="Reference" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="connect_to_signal">
+			<argument index="0" name="obj" type="Object">
+			</argument>
+			<argument index="1" name="signals" type="String">
+			</argument>
+			<argument index="2" name="args" type="Array">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="is_valid" qualifiers="const">
+			<return type="bool">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="resume">
+			<return type="Array">
+			</return>
+			<argument index="0" name="args" type="Array" default="NULL">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptGlobalConstant" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_global_constant">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_global_constant">
+			<argument index="0" name="index" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptIndexGet" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptIndexSet" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptInputFilter" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptInputSelector" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptIterator" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptMathConstant" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_math_constant">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_math_constant">
+			<argument index="0" name="which" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptNode" inherits="Resource" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_default_input_value" qualifiers="const">
+			<return type="Variant">
+			</return>
+			<argument index="0" name="port_idx" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="get_visual_script" qualifiers="const">
+			<return type="VisualScript">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_default_input_value">
+			<argument index="0" name="port_idx" type="int">
+			</argument>
+			<argument index="1" name="value" type="Variant">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<signals>
+		<signal name="ports_changed">
+			<description>
+			</description>
+		</signal>
+	</signals>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptOperator" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_operator" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_operator">
+			<argument index="0" name="op" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptPropertyGet" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_base_path" qualifiers="const">
+			<return type="NodePath">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_base_type" qualifiers="const">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_basic_type" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_call_mode" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_event_type" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_property" qualifiers="const">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_base_path">
+			<argument index="0" name="base_path" type="NodePath">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_base_type">
+			<argument index="0" name="base_type" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_basic_type">
+			<argument index="0" name="basic_type" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_call_mode">
+			<argument index="0" name="mode" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_event_type">
+			<argument index="0" name="event_type" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_property">
+			<argument index="0" name="property" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+		<constant name="CALL_MODE_SELF" value="0">
+		</constant>
+		<constant name="CALL_MODE_NODE_PATH" value="1">
+		</constant>
+		<constant name="CALL_MODE_INSTANCE" value="2">
+		</constant>
+	</constants>
+</class>
+<class name="VisualScriptPropertySet" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_base_path" qualifiers="const">
+			<return type="NodePath">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_base_type" qualifiers="const">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_basic_type" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_builtin_value" qualifiers="const">
+			<description>
+			</description>
+		</method>
+		<method name="get_call_mode" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_event_type" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_property" qualifiers="const">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="is_using_builtin_value" qualifiers="const">
+			<return type="bool">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_base_path">
+			<argument index="0" name="base_path" type="NodePath">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_base_type">
+			<argument index="0" name="base_type" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_basic_type">
+			<argument index="0" name="basic_type" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_builtin_value">
+			<argument index="0" name="value" type="Variant">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_call_mode">
+			<argument index="0" name="mode" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_event_type">
+			<argument index="0" name="event_type" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_property">
+			<argument index="0" name="property" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_use_builtin_value">
+			<argument index="0" name="enable" type="bool">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+		<constant name="CALL_MODE_SELF" value="0">
+		</constant>
+		<constant name="CALL_MODE_NODE_PATH" value="1">
+		</constant>
+		<constant name="CALL_MODE_INSTANCE" value="2">
+		</constant>
+	</constants>
+</class>
+<class name="VisualScriptResourcePath" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_resource_path">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_resource_path">
+			<argument index="0" name="path" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptReturn" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_return_type" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="is_return_value_enabled" qualifiers="const">
+			<return type="bool">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_enable_return_value">
+			<argument index="0" name="enable" type="bool">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_return_type">
+			<argument index="0" name="type" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptSceneNode" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_node_path">
+			<return type="NodePath">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_node_path">
+			<argument index="0" name="path" type="NodePath">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptSceneTree" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptScriptCall" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_argument_count" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_base_path" qualifiers="const">
+			<return type="NodePath">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_call_mode" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_function" qualifiers="const">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_argument_count">
+			<argument index="0" name="argument_count" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_base_path">
+			<argument index="0" name="base_path" type="NodePath">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_call_mode">
+			<argument index="0" name="mode" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_function">
+			<argument index="0" name="function" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+		<constant name="CALL_MODE_SELF" value="0">
+		</constant>
+		<constant name="CALL_MODE_NODE_PATH" value="1">
+		</constant>
+	</constants>
+</class>
+<class name="VisualScriptSelf" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptSequence" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_steps" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_steps">
+			<argument index="0" name="steps" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptSubCall" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="_subcall" qualifiers="virtual">
+			<argument index="0" name="arguments" type="Variant">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptVariableGet" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_variable" qualifiers="const">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_variable">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptVariableSet" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_variable" qualifiers="const">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_variable">
+			<argument index="0" name="name" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptWhile" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+	</methods>
+	<constants>
+	</constants>
+</class>
+<class name="VisualScriptYield" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_wait_time">
+			<return type="float">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_yield_mode">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_wait_time">
+			<argument index="0" name="sec" type="float">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_yield_mode">
+			<argument index="0" name="mode" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+		<constant name="YIELD_FRAME" value="0">
+		</constant>
+		<constant name="YIELD_FIXED_FRAME" value="1">
+		</constant>
+		<constant name="YIELD_WAIT" value="2">
+		</constant>
+	</constants>
+</class>
+<class name="VisualScriptYieldSignal" inherits="VisualScriptNode" category="Core">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="get_base_path" qualifiers="const">
+			<return type="NodePath">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_base_type" qualifiers="const">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_call_mode" qualifiers="const">
+			<return type="int">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="get_signal" qualifiers="const">
+			<return type="String">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="set_base_path">
+			<argument index="0" name="base_path" type="NodePath">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_base_type">
+			<argument index="0" name="base_type" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_call_mode">
+			<argument index="0" name="mode" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="set_signal">
+			<argument index="0" name="signal" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+		<constant name="CALL_MODE_SELF" value="0">
+		</constant>
+		<constant name="CALL_MODE_NODE_PATH" value="1">
+		</constant>
+		<constant name="CALL_MODE_INSTANCE" value="2">
+		</constant>
+	</constants>
+</class>
 <class name="VisualServer" inherits="Object" category="Core">
 	<brief_description>
 		Server for anything visible.
@@ -44948,6 +46871,8 @@
 			<argument index="1" name="arg1" type="Vector2">
 			</argument>
 			<argument index="2" name="arg2" type="int">
+			</argument>
+			<argument index="3" name="arg3" type="Rect2">
 			</argument>
 			<description>
 			</description>
@@ -46428,24 +48353,28 @@
 			<return type="RID">
 			</return>
 			<description>
+				Retrieve the [RID] of this world's canvas resource. Used by the [VisualServer] for 2D drawing.
 			</description>
 		</method>
 		<method name="get_direct_space_state">
 			<return type="Physics2DDirectSpaceState">
 			</return>
 			<description>
+				Retrieve the state of this world's physics space. This allows arbitrary querying for collision.
 			</description>
 		</method>
 		<method name="get_sound_space">
 			<return type="RID">
 			</return>
 			<description>
+				Retrieve the [RID] of this world's sound space resource. Used by the [SpatialSound2DServer] for 2D spatial audio.
 			</description>
 		</method>
 		<method name="get_space">
 			<return type="RID">
 			</return>
 			<description>
+				Retrieve the [RID] of this world's physics space resource. Used by the [Physics2DServer] for 2D physics, treating it as both a space and an area.
 			</description>
 		</method>
 	</methods>

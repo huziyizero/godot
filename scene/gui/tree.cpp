@@ -693,6 +693,7 @@ void TreeItem::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("add_button","column","button:Texture","button_idx","disabled"),&TreeItem::add_button,DEFVAL(-1),DEFVAL(false));
 	ObjectTypeDB::bind_method(_MD("get_button_count","column"),&TreeItem::get_button_count);
 	ObjectTypeDB::bind_method(_MD("get_button:Texture","column","button_idx"),&TreeItem::get_button);
+	ObjectTypeDB::bind_method(_MD("set_button","column","button_idx","button:Texture"),&TreeItem::set_button);
 	ObjectTypeDB::bind_method(_MD("erase_button","column","button_idx"),&TreeItem::erase_button);
 	ObjectTypeDB::bind_method(_MD("is_button_disabled","column","button_idx"),&TreeItem::is_button_disabled);
 
@@ -1178,8 +1179,8 @@ int Tree::draw_item(const Point2i& p_pos,const Point2& p_draw_ofs, const Size2& 
 
 						Ref<Texture> updown = cache.updown;
 
-						//String valtext = String::num( p_item->cells[i].val, Math::decimals( p_item->cells[i].step ) );
-						String valtext = rtos( p_item->cells[i].val );
+						String valtext = String::num( p_item->cells[i].val, Math::step_decimals( p_item->cells[i].step ) );
+						//String valtext = rtos( p_item->cells[i].val );
 						font->draw( ci, text_pos, valtext, col, item_rect.size.x-updown->get_width());
 
 						if (!p_item->cells[i].editable)
@@ -1745,7 +1746,7 @@ int Tree::propagate_mouse_event(const Point2i &p_pos,int x_ofs,int y_ofs,bool p_
 
 					}  else {
 
-						editor_text=String::num( p_item->cells[col].val, Math::decimals( p_item->cells[col].step ) );
+						editor_text=String::num( p_item->cells[col].val, Math::step_decimals( p_item->cells[col].step ) );
 						if (select_mode==SELECT_MULTI && get_tree()->get_last_event_id() == focus_in_id)
 							bring_up_editor=false;
 
@@ -2520,7 +2521,7 @@ bool Tree::edit_selected() {
 		text_editor->set_pos( textedpos );
 		text_editor->set_size( rect.size);
 		text_editor->clear();
-		text_editor->set_text( c.mode==TreeItem::CELL_MODE_STRING?c.text:rtos(c.val) );
+		text_editor->set_text( c.mode==TreeItem::CELL_MODE_STRING?c.text:String::num( c.val, Math::step_decimals( c.step ) ) );
 		text_editor->select_all();
 
 		if (c.mode==TreeItem::CELL_MODE_RANGE || c.mode==TreeItem::CELL_MODE_RANGE_EXPRESSION ) {

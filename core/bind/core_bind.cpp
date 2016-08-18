@@ -857,7 +857,6 @@ void _OS::print_all_textures_by_size() {
 
 	for(List<_OSCoreBindImg>::Element *E=imgs.front();E;E=E->next()) {
 
-		print_line(E->get().path+" - "+String::humanize_size(E->get().vram)+"  ("+E->get().size+") - total:"+String::humanize_size(total) );
 		total-=E->get().vram;
 	}
 }
@@ -891,23 +890,21 @@ void _OS::print_resources_by_type(const Vector<String>& p_types) {
 
 
 		type_count[r->get_type()]++;
-
-		print_line(r->get_type()+": "+r->get_path());
-
-		List<String> metas;
-		r->get_meta_list(&metas);
-		for (List<String>::Element* me = metas.front(); me; me = me->next()) {
-			print_line(" "+String(me->get()) + ": " + r->get_meta(me->get()));
-		};
-	}
-
-	for(Map<String,int>::Element *E=type_count.front();E;E=E->next()) {
-
-		print_line(E->key()+" count: "+itos(E->get()));
 	}
 
 };
 
+bool _OS::has_virtual_keyboard() const {
+	return OS::get_singleton()->has_virtual_keyboard();
+}
+
+void _OS::show_virtual_keyboard(const String& p_existing_text) {
+	OS::get_singleton()->show_virtual_keyboard(p_existing_text, Rect2());
+}
+
+void _OS::hide_virtual_keyboard() {
+	OS::get_singleton()->hide_virtual_keyboard();
+}
 
 void _OS::print_all_resources(const String& p_to_file ) {
 
@@ -957,6 +954,11 @@ void _OS::native_video_stop() {
 
 	OS::get_singleton()->native_video_stop();
 };
+
+void _OS::request_attention() {
+
+	OS::get_singleton()->request_attention();
+}
 
 bool _OS::is_debug_build() const {
 
@@ -1016,6 +1018,11 @@ void _OS::alert(const String& p_alert,const String& p_title) {
 	OS::get_singleton()->alert(p_alert,p_title);
 }
 
+Dictionary _OS::get_engine_version() const {
+
+	return OS::get_singleton()->get_engine_version();
+}
+
 _OS *_OS::singleton=NULL;
 
 void _OS::_bind_methods() {
@@ -1051,6 +1058,7 @@ void _OS::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("is_window_minimized"),&_OS::is_window_minimized);
 	ObjectTypeDB::bind_method(_MD("set_window_maximized", "enabled"),&_OS::set_window_maximized);
 	ObjectTypeDB::bind_method(_MD("is_window_maximized"),&_OS::is_window_maximized);
+	ObjectTypeDB::bind_method(_MD("request_attention"), &_OS::request_attention);
 
 	ObjectTypeDB::bind_method(_MD("set_borderless_window", "borderless"), &_OS::set_borderless_window);
 	ObjectTypeDB::bind_method(_MD("get_borderless_window"), &_OS::get_borderless_window);
@@ -1126,6 +1134,9 @@ void _OS::_bind_methods() {
 
 	ObjectTypeDB::bind_method(_MD("dump_memory_to_file","file"),&_OS::dump_memory_to_file);
 	ObjectTypeDB::bind_method(_MD("dump_resources_to_file","file"),&_OS::dump_resources_to_file);
+	ObjectTypeDB::bind_method(_MD("has_virtual_keyboard"),&_OS::has_virtual_keyboard);
+	ObjectTypeDB::bind_method(_MD("show_virtual_keyboard", "existing_text"),&_OS::show_virtual_keyboard,DEFVAL(""));
+	ObjectTypeDB::bind_method(_MD("hide_virtual_keyboard"),&_OS::hide_virtual_keyboard);
 	ObjectTypeDB::bind_method(_MD("print_resources_in_use","short"),&_OS::print_resources_in_use,DEFVAL(false));
 	ObjectTypeDB::bind_method(_MD("print_all_resources","tofile"),&_OS::print_all_resources,DEFVAL(""));
 
@@ -1162,6 +1173,8 @@ void _OS::_bind_methods() {
 
 	ObjectTypeDB::bind_method(_MD("set_use_vsync","enable"),&_OS::set_use_vsync);
 	ObjectTypeDB::bind_method(_MD("is_vsnc_enabled"),&_OS::is_vsnc_enabled);
+
+	ObjectTypeDB::bind_method(_MD("get_engine_version"),&_OS::get_engine_version);
 
 	BIND_CONSTANT( DAY_SUNDAY );
 	BIND_CONSTANT( DAY_MONDAY );
@@ -1802,7 +1815,7 @@ void _File::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("get_line"),&_File::get_line);
 	ObjectTypeDB::bind_method(_MD("get_as_text"),&_File::get_as_text);
 	ObjectTypeDB::bind_method(_MD("get_md5","path"),&_File::get_md5);
-	ObjectTypeDB::bind_method(_MD("get_sha256","path"),&_File::get_md5);
+	ObjectTypeDB::bind_method(_MD("get_sha256","path"),&_File::get_sha256);
 	ObjectTypeDB::bind_method(_MD("get_endian_swap"),&_File::get_endian_swap);
 	ObjectTypeDB::bind_method(_MD("set_endian_swap","enable"),&_File::set_endian_swap);
 	ObjectTypeDB::bind_method(_MD("get_error:Error"),&_File::get_error);
@@ -1923,6 +1936,13 @@ Error _Directory::make_dir(String p_dir){
 Error _Directory::make_dir_recursive(String p_dir){
 
 	ERR_FAIL_COND_V(!d,ERR_UNCONFIGURED);
+	if (!p_dir.is_rel_path()) {
+		DirAccess *d = DirAccess::create_for_path(p_dir);
+		Error err = d->make_dir_recursive(p_dir);
+		memdelete(d);
+		return err;
+
+	}
 	return d->make_dir_recursive(p_dir);
 }
 

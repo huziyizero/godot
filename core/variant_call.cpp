@@ -474,6 +474,7 @@ static void _call_##m_type##_##m_method(Variant& r_ret,Variant& p_self,const Var
 	VCALL_LOCALMEM2R(Array,rfind);
 	VCALL_LOCALMEM1R(Array,find_last);
 	VCALL_LOCALMEM1R(Array,count);
+	VCALL_LOCALMEM1R(Array,has);
 	VCALL_LOCALMEM1(Array,erase);
 	VCALL_LOCALMEM0(Array,sort);
 	VCALL_LOCALMEM2(Array,sort_custom);
@@ -1172,6 +1173,56 @@ bool Variant::has_method(const StringName& p_method) const {
 
 }
 
+Vector<Variant::Type> Variant::get_method_argument_types(Variant::Type p_type,const StringName& p_method) {
+
+	const _VariantCall::TypeFunc &fd = _VariantCall::type_funcs[p_type];
+
+	const Map<StringName,_VariantCall::FuncData>::Element *E = fd.functions.find(p_method);
+	if (!E)
+		return Vector<Variant::Type>();
+
+	return E->get().arg_types;
+}
+
+Vector<StringName> Variant::get_method_argument_names(Variant::Type p_type,const StringName& p_method) {
+
+
+	const _VariantCall::TypeFunc &fd = _VariantCall::type_funcs[p_type];
+
+	const Map<StringName,_VariantCall::FuncData>::Element *E = fd.functions.find(p_method);
+	if (!E)
+		return Vector<StringName>();
+
+	return E->get().arg_names;
+
+}
+
+Variant::Type Variant::get_method_return_type(Variant::Type p_type,const StringName& p_method,bool* r_has_return) {
+
+	const _VariantCall::TypeFunc &fd = _VariantCall::type_funcs[p_type];
+
+	const Map<StringName,_VariantCall::FuncData>::Element *E = fd.functions.find(p_method);
+	if (!E)
+		return Variant::NIL;
+
+	if (r_has_return)
+		*r_has_return=E->get().return_type;
+
+	return E->get().return_type;
+}
+
+Vector<Variant> Variant::get_method_default_arguments(Variant::Type p_type,const StringName& p_method) {
+
+	const _VariantCall::TypeFunc &fd = _VariantCall::type_funcs[p_type];
+
+	const Map<StringName,_VariantCall::FuncData>::Element *E = fd.functions.find(p_method);
+	if (!E)
+		return Vector<Variant>();
+
+	return E->get().default_args;
+
+}
+
 void Variant::get_method_list(List<MethodInfo> *p_list) const {
 
 
@@ -1516,6 +1567,7 @@ _VariantCall::addfunc(Variant::m_vtype,Variant::m_ret,_SCS(#m_method),VCALL(m_cl
 	ADDFUNC2(ARRAY,INT,Array,rfind,NIL,"what",INT,"from",varray(-1));
 	ADDFUNC1(ARRAY,INT,Array,find_last,NIL,"value",varray());
 	ADDFUNC1(ARRAY,INT,Array,count,NIL,"value",varray());
+	ADDFUNC1(ARRAY,BOOL,Array,has,NIL,"value",varray());
 	ADDFUNC0(ARRAY,NIL,Array,pop_back,varray());
 	ADDFUNC0(ARRAY,NIL,Array,pop_front,varray());
 	ADDFUNC0(ARRAY,NIL,Array,sort,varray());

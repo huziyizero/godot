@@ -154,6 +154,9 @@ void CreateDialog::_update_search() {
 	TreeItem *root = search_options->create_item();
 
 	root->set_text(0,base_type);
+	if (has_icon(base_type,"EditorIcons")) {
+		root->set_icon(0,get_icon(base_type,"EditorIcons"));
+	}
 
 	List<StringName>::Element *I=type_list.front();
 	TreeItem *to_select=NULL;
@@ -161,8 +164,11 @@ void CreateDialog::_update_search() {
 	for(;I;I=I->next()) {
 
 
+
 		String type=I->get();
 
+		if (base_type=="Node" && type.begins_with("Editor"))
+			continue; // do not show editor nodes
 
 		if (!ObjectTypeDB::can_instance(type))
 			continue; // cant create what can't be instanced
@@ -286,9 +292,12 @@ String CreateDialog::get_selected_type() {
 Object *CreateDialog::instance_selected() {
 
 	TreeItem *selected = search_options->get_selected();
+
 	if (selected) {
 
 		String custom = selected->get_metadata(0);
+
+
 		if (custom!=String()) {
 			if (EditorNode::get_editor_data().get_custom_types().has(custom)) {
 
@@ -316,6 +325,7 @@ Object *CreateDialog::instance_selected() {
 			return ObjectTypeDB::instance(selected->get_text(0));
 		}
 	}
+
 
 	return NULL;
 }
